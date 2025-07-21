@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista para el reporte en forma de lista -->
+    <record id="view_report_pdv_sale_tree" model="ir.ui.view">
+        <field name="name">report.pdv.sale.tree</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <tree string="Reporte de Ventas" create="false">
+                <field name="cliente"/>
+                <field name="tipo_factura"/>
+                <field name="sucursal_rep"/>
+                <field name="order_rep" widget="many2one_clickable"/>
+                <!--<field name="id" string="Numero"/>-->
+                <field name="numero_de_orden_rep"/>
+                <field name="numero_de_factura_rep" widget="many2one_clickable"/>
+                <field name="creado_en_rep"/>
+                <field name="categoria_producto_rep"/>
+                <field name="unidad_de_medida_rep"/>
+                <field name="reference"/>
+                <field name="producto_rep"/>
+                <field name="cantidad_rep"/>
+                <field name="precio_unitario_rep"/>
+                <!-- Nuevos-->
+                <field name="subtotal_sin_tax"/>
+                <field name="tax"/>
+                <field name="total"/>
+                <field name="cajero"/>
+                <field name="metodo_pago"/>
+                <field name="nota"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+    <!--search-->
+    <record id="view_report_pdv_sale_tree_search" model="ir.ui.view">
+        <field name="name">report.pdv.sale.tree.search</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="sucursal_rep"/>
+                <field name="order_rep"/>
+                <field name="numero_de_orden_rep"/>
+                <field name="numero_de_factura_rep"/>
+                <field name="creado_en_rep"/>
+                <field name="categoria_producto_rep"/>
+                <field name="unidad_de_medida_rep"/>
+                <field name="reference"/>
+                <field name="producto_rep"/>
+                <field name="cantidad_rep"/>
+                <field name="precio_unitario_rep"/>
+                <field name="subtotal_sin_tax"/>
+                <field name="tax"/>
+                <field name="total"/>
+                <field name="cajero"/>
+                <field name="metodo_pago"/>
+                <field name="nota"/>
+                <field name="status"/>
+                <field name="tipo_factura"/>
+                <field name="cliente"/>
+                <!-- Filtros personalizados (opcional) -->
+                <!-- <filter string="Sucursal" name="filter_sucursal" domain="[]" context="{'group_by': 'sucursal_rep'}"/>
+                <filter string="Tipo Factura" name="filter_tipo" domain="[]" context="{'group_by': 'tipo_factura'}"/>
+                <filter string="Cliente" name="filter_cliente" domain="[]" context="{'group_by': 'cliente'}"/>
+                <filter string="Ordenes" name="filter_orden" domain="[]" context="{'group_by': 'numero_de_orden_rep'}"/> -->
+                <!-- Agrupaciones que aparecen en "Agrupar por" -->
+                <group expand="0" string="Agrupar por">
+                    <filter string="Sucursal" name="group_sucursal" context="{'group_by': 'sucursal_rep'}"/>
+                     <filter string="Método de Pago" name="group_pago" context="{'group_by': 'metodo_pago'}"/>
+                     <filter string="Cliente" name="group_cliente" context="{'group_by': 'cliente'}"/>
+                      <filter string="Tipo Factura" name="filter_tipo" context="{'group_by': 'tipo_factura'}"/>
+                      <filter string="Ordenes" name="group_ordenes" context="{'group_by': 'numero_de_orden_rep'}"/>
+                    <filter string="Producto" name="group_producto" context="{'group_by': 'producto_rep'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- Vista para el reporte en forma de lista -->
+    <record id="action_menu_reporte_pdv_sale" model="ir.actions.act_window">
+        <field name="name">Reporte de Ventas</field>
+        <field name="view_id" ref="view_report_pdv_sale_tree" />
+        <field name="res_model">pos.order.line</field>
+        <field name="type">ir.actions.act_window</field>
+    </record>
+    <!-- Vista para el reporte en forma de lista -->
+    <menuitem id="menu_reporte_pdv_sale"  
+        name="Reporte de Ventas"  
+        parent="point_of_sale.menu_point_rep"  
+        action="action_menu_reporte_pdv_sale"  
+        sequence="10"  
+    />
+</odoo>

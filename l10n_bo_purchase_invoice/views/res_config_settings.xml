@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="view_l10n_bo_purchase_invoice_res_config_settings_form" model="ir.ui.view">
+            <field name="name">view_l10n_bo_purchase_invoice_res_config_settings_form</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form" />
+            <field name="priority" eval="17" />
+            <field name="arch" type="xml">
+                <xpath expr="//block[@name='default_taxes_setting_container']/setting[last()]" position="after">
+                    <setting id="l10n_bo_purchase_invoice_tax_groups" string="Grupos de impuestos" help="Crea grupos de impuestos de compras">
+                        <button name="create_account_tax_groups" string="Crear grupos para compras" type="object" icon="fa-play" class="oe_highlight"/>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

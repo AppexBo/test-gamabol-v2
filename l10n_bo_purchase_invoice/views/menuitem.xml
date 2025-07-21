@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem
+        id="l10n_bo_purchase_invoice_root"
+        name="Compras (BO)"
+        sequence="2"
+        parent="base.menu_administration"
+        groups="l10n_bo_purchase_invoice.group_adm_purchase_edi"
+        />
+        <menuitem 
+            id="purchase_wsdl_dates"
+            name="Servicios (BO)"
+            parent="l10n_bo_purchase_invoice_root"
+            sequence="1"
+            />
+            <menuitem 
+                id="l10n_bo_purchase_wsdl_root"
+                name="Wsdl SIAT"
+                parent="purchase_wsdl_dates"
+                action="view_l10n_bo_purchase_wsdl_purchase_tree_form"
+                sequence="1"
+            />
+        <menuitem
+            id="purchase_packages"
+            name="Paquetes (BO)"
+            parent="l10n_bo_purchase_invoice_root"
+            sequence="2"
+            />
+        
+            <menuitem
+                id="purchase_packages_menu"
+                name="Paquetes"
+                parent="purchase_packages"
+                sequence="1"
+                action="action_l10n_bo_purchase_invoice_act_window"
+                />
+        
+            
+</odoo>

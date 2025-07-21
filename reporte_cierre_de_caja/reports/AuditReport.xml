@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="cash_report_pdf_format" model="report.paperformat">
+            <field name="name">Cash Report PDF</field>
+            <field name="default" eval="False" />
+            <field name="page_width">80</field>   <!-- Ancho en mm (estándar para impresoras térmicas) -->
+            <field name="page_height">150</field>
+            <field name="format">custom</field>			
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">5</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False" />
+            <field name="orientation">Portrait</field>
+            <field name="header_spacing">0</field>
+            <field name="dpi">80</field>
+        </record>
+
+        <record id="moves_report_pdf" model="ir.actions.report">
+            <field name="name">Reporte de Caja</field>
+            <field name="model">cash.report.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">reporte_cierre_de_caja.cash_report_pdf_doc</field>
+            <field name="report_file">reporte_cierre_de_caja.cash_report_pdf_doc</field>
+			<field name="binding_type">report</field>
+			<field name="paperformat_id" ref="reporte_cierre_de_caja.cash_report_pdf_format"/>
+        </record>
+
+        <template id="cash_report_pdf_doc">
+            <t t-set="company" t-value="env.company"/>
+            <t t-call="web.html_container">
+                <div class="page" style="font-size: 10px;">
+                    <div class="pos-receipt">
+                        <!--<span t-esc="str(form)"/>-->
+                        <div class="">
+                            <div style="text-align: center;">
+                                <div>
+                                    <strong>INFORME</strong>
+                                </div>
+                                <div>
+                                    <strong>--------------------------------</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pos-receipt-contact">
+                            <div style="text-align: left;">
+                                <div>
+                                    <strong>Sesion: </strong> <t t-esc='form["Sesion"]'/>
+                                </div>
+
+                                <div>
+                                    <strong>Punto de Venta: </strong> <t t-esc='form["Punto_de_Venta"]'/>
+                                </div>
+
+                                <div>
+                                    <strong>Impreso por: </strong> <t t-esc='env.user.name'/>
+                                </div>
+                                
+                                <div>
+                                    <strong>Abierta por: </strong> <t t-esc='form["Abierto_por"]'/>
+                                </div>
+
+                                <div>
+                                    <strong>Estado: </strong> 
+                                    <t t-if="form['Estado'] == 'opening_control'">Control de apertura</t>
+                                    <t t-elif="form['Estado'] == 'opened'">En progreso</t>
+                                    <t t-elif="form['Estado'] == 'closing_control'">Control de cierre</t>
+                                    <t t-elif="form['Estado'] == 'closed'">Cerrado y registrado</t>
+                                    <t t-else=""><t t-esc="form['Estado']"/></t>
+                                </div>
+                                <div>
+                                    <strong>F. Apertura: </strong> <t t-esc='form["Fecha_de_Apertura"]'/>
+                                </div>
+                                <div>
+                                    <strong>F. Cierre: </strong> 
+                                    <t t-if="form['Fecha_de_Cierre']">
+                                        <t t-esc='form["Fecha_de_Cierre"]'/>
+                                    </t>
+                                </div>
+
+                                <div>
+                                    <strong>Saldo Inicial: </strong> <t t-esc="'%.2f' % float(form.get('Saldo_Inicial', 0))"/>
+                                </div>
+                                <div>
+                                    <strong>Saldo Final: </strong> <t t-esc="'%.2f' % float(form.get('Saldo_Final', 0))"/>
+                                </div>
+                                <div>
+                                    <strong>Diferencia: </strong> 
+                                    <t t-esc="'%.2f' % float(form.get('Saldo_Final', 0) - form.get('Saldo_Inicial', 0))"/>
+                                </div>
+                                <!--
+                                <div>
+                                    <strong>Total Descuentos: </strong> <t t-esc="'%.2f' % float(form.get('Descuento', 0))"/>
+                                </div>
+                                -->
+                                <div>
+                                    <strong>Total Impuestos: </strong> <t t-esc="'%.2f' % float(form.get('Tax', 0))"/>
+                                </div>
+                                
+                                <div>
+                                    <strong>Total Ventas: </strong> <t t-esc="'%.2f' % float(form.get('Total_en_Bruto', 0))"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br/>
+                        
+                        <div class="pos-receipt-center-align">
+                            <strong>Detalles de pagos</strong>
+                        </div>
+                        
+                        <table class='orderlines' style="width: 100%; font-size: 10px; text-align: left; margin: 0px auto; border-collapse: collapse;">
+                            <colgroup>
+                                <col width='70%' />
+                                <col width='30%' />
+                            </colgroup>
+                            <thead>
+                                <tr >
+                                    <th style="border: 1px solid black;">Nombre</th>
+                                    <th style="border: 1px solid black;">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="form['Metodos_de_Pago']" t-as="metodo_de_pago" t-key="metodo_de_pago">
+                                    <td style="border: 1px solid black;">
+                                        <t t-esc="form['Metodos_de_Pago'][metodo_de_pago]['name']"/>	 
+                                    </td>
+                                    <td style="border: 1px solid black;">
+                                        <!--<t t-esc="form['Metodos_de_Pago'][metodo_de_pago]['qty']"/>	 -->
+                                        <t t-esc="'{:.2f}'.format(float(form.get('Metodos_de_Pago', {}).get(metodo_de_pago, {}).get('qty', 0)))"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <br/>
+                        
+                        <div class="pos-receipt-center-align">
+                            <strong>Pagos</strong>
+                        </div>
+                        
+                        <t t-foreach="form['Metodos_de_Pago']" t-as="metodo_key" t-key="metodo_key">
+                            <div class="pos-receipt-center-align">
+                                <strong><t t-esc="form['Metodos_de_Pago'][metodo_key]['name']"/></strong>
+                            </div>
+                            
+                            <t t-if="form['Metodos_de_Pago'][metodo_key].get('extra_data')">
+                                <table class='orderlines' style="width: 100%; font-size: 10px; text-align: left; margin: 0px auto; border-collapse: collapse;">
+                                    <colgroup>
+                                        <col width='20%' />
+                                        <col width='20%' />
+                                        <col width='30%' />
+                                        <col width='30%' />
+                                    </colgroup>
+                                    <thead>
+                                        <tr >
+                                            <th style="border: 1px solid black;">#Ref.</th>
+                                            <th style="border: 1px solid black;">Monto</th>
+                                            <th style="border: 1px solid black;">Fecha</th>
+                                            <th style="border: 1px solid black;">Fact.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="form['Metodos_de_Pago'][metodo_key]['extra_data']" t-as="pago" t-key="pago_index">
+                                            <td style="border: 1px solid black;">
+                                                <t t-esc="pago.get('pos_reference', '')"/>
+                                            </td>
+                                            <td style="border: 1px solid black;">
+                                                <t t-esc="'%.2f' % float(pago.get('amount', 0))"/>
+                                            </td>
+                                            <td style="border: 1px solid black;">
+                                                <t t-esc="pago.get('payment_date')"/>
+                                            </td>
+                                            <td style="border: 1px solid black;">
+                                                <t t-esc="pago.get('account_move') or '-'"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </t>    
+        </template>
+        
+    </data>
+</odoo>

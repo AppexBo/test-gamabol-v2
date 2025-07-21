@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="l10n_bo_purchase_wsdl_1" model="l10n.bo.purchase.wsdl">
+            <field name="name">Servicio de registro de compras (PRUEBA)</field>
+            <field name="wsdl">https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioRecepcionCompras?wsdl</field>
+            <field name="environment_type">2</field>
+            <field name="service_type">ServicioRecepcionCompras</field>
+        </record>
+    </data>
+</odoo>

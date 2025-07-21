@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="hr_bo_employee_expense_receipt_record" model="hr.employee.receipt.register">
+            <field name="name">Recibos de empleados</field>
+        </record>
+    </data>
+</odoo>

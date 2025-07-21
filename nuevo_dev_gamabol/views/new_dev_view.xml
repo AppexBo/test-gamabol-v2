@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- <odoo>
+    <record id="view_report_pos_order_search_inherit" model="ir.ui.view">
+        <field name="name">report.pos.order.search.inherit.checkbox</field>
+        <field name="model">report.pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_report_pos_order_search"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <filter name="has_barcode_true" string="Solo con código de barras"
+                domain="[('has_barcode', '=', True)]"/>
+                <filter name="has_barcode_false" string="Sin código de barras"
+                domain="[('has_barcode', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+</odoo> -->
+<odoo>
+    <record id="view_report_pos_order_pivot_inherit" model="ir.ui.view">
+        <field name="name">report.pos.order.pivot.inherit</field>
+        <field name="model">report.pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_report_pos_order_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="barcode" type="row"/>  <!-- Aquí agregamos el campo barcode -->
+            </xpath>
+        </field>
+    </record>
+</odoo>

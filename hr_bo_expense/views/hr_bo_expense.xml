@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_hr_bo_expense" model="ir.actions.act_window">
+        <field name="name">Facturas/Recibos gastos</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.bo.expense</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea tu Facturacion/Recibo de gasto
+            </p>
+        </field>
+    </record>
+
+    <record id="view_hr_bo_expense_tree" model="ir.ui.view">
+        <field name="model">hr.bo.expense</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="hr_expense_ids" readonly="state != 'draft'" widget="many2many_tags" domain="[('sheet_id', '=', hr_expense_sheet_id)]" />
+                <field name="journal_id" readonly="state != 'draft'"/>
+                <field name="partner_id" readonly="state != 'draft'"/>
+                <field name="invoice_date" readonly="state != 'draft'"/>
+                <field name="cuf" readonly="state != 'draft'" required="bo_purchase_edi" />
+                <field name="invoice_number" readonly="state != 'draft'"/>
+                <field name="purchase_type" optional="hide" readonly="state != 'draft'"/>
+                <field name="dui_dim_number" optional="hide" readonly="state != 'draft'"/>
+                <field name="control_code" optional="hide" readonly="state != 'draft'"  />
+                <field name="invoice_id" optional="hide" options="{'no_create': True}" readonly="state == 'done'" />
+                <field name="hr_expense_sheet_id" column_invisible="True"/>
+                <field name="state" column_invisible="True"/>
+                <field name="bo_purchase_edi" column_invisible="True"/>
+                
+                
+                
+            </tree>
+        </field>
+    </record>
+</odoo>

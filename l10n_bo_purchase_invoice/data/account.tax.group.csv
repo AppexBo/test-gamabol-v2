@@ -1,0 +1,8 @@
+id,name,sequence,purchase_edi_group,purchase_edi_description
+tax_ice_purchase_group,RC ICE,10,True,RC ICE
+tax_iehd_purchase_group,RC IEHD,30,False,RC IEHD
+tax_ipj_purchase_group,RC IPJ,40,True,IPJ
+tax_rate_purchase_group,RC Tasas,50,True,RC Tasas
+tax_no_iva_purchase_group,RC no sujeto a C.F.,60,True,RC no sujeto a C.F.
+tax_exempt_purchase_group,RC Exp. Y Exentos,70,True,RC Exp. Y Exentos
+tax_zero_rate_purchase_group,RC Tasa cero,80,True,RC Tasa cero

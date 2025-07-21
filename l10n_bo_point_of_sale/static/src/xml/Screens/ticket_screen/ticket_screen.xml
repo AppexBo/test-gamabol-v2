@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Inherited PaymentScreen template in order to add button for adding and showing payment reference.-->
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+    
+        <xpath expr="//div[hasclass('rightpane')]/div[hasclass('orders')]/t[@t-if='_filteredOrderList.length !== 0']/t[@t-if='!ui.isSmall']/div/div[8]/div" position="after">
+            <t t-if="pos.pos_config.enable_bo_edi">
+                <t t-if="order.codigoEstado" >
+                    <span style="font-size: 10px;" t-esc="order.edi_state"></span>
+                </t>
+                 <t t-if="order.account_move and order.codigoEstado == 908" >
+                    
+                     <div class="col very-narrow delete-button p-2 btn-primary" name="delete" t-on-click.stop="() => this.onL10nBoCancelInovice(order)"> Anular </div>
+                </t>
+                
+            </t>
+            
+        </xpath>
+        
+    </t>
+</templates>

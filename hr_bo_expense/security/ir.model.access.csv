@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_employee_receipt_register,access_hr_employee_receipt_register,model_hr_employee_receipt_register,,1,1,1,0
+access_hr_employee_expense_receipt,access_hr_employee_expense_receipt,model_hr_employee_expense_receipt,,1,1,1,1
+access_hr_bo_expense,access_hr_bo_expense,model_hr_bo_expense,,1,1,1,1
