@@ -26,19 +26,6 @@ class L10nBoBranchOffice(models.Model):
         default=lambda self: self.env.company
     )
 
-    _sql_constraints = [
-        ('unique_company', 'unique(company_id)', 'Solo se permite un registro por compañía.')
-    ]
-
-    @api.model
-    def create(self, vals):
-        existing_record = self.search([('company_id', '=', vals.get('company_id'))])
-        if existing_record:
-            raise ValidationError('Ya existe un registro para esta compañía.')
-        
-        res = super(L10nBoBranchOffice, self).create(vals)
-        return res
-
     def wizard_add_pos(self):
         for record in self:
             return {
@@ -77,13 +64,18 @@ class L10nBoBranchOffice(models.Model):
                 }
             )
 
-   
+
     
     address = fields.Text(
         string='Dirección',
         copy=False
     )
 
+    def getAddress(self):
+        if self.address:
+            return self.address
+        else:
+            raise UserError(f'La {self.name} no tiene una dirección')
 
     l10n_bo_pos_ids = fields.One2many(
         string='Puntos de venta',
@@ -92,6 +84,37 @@ class L10nBoBranchOffice(models.Model):
         copy=False
     )
 
+    state_id = fields.Many2one(
+        string='Departamento',
+        comodel_name='res.country.state',
+        domain=lambda self: [('country_id', '=', self.env.company.country_id.id)]
+    )
+
+    province_id = fields.Many2one(
+        string='Provincia',
+        comodel_name='res.city',
+        copy=False
+    )
+    
+    municipality_id = fields.Many2one(
+        string='Municipio',
+        comodel_name='res.municipality',
+        copy=False,
+    )
+
+    @api.onchange('state_id')
+    def _onchange_state_id(self):
+        self.province_id = False
+        self.municipality_id = False
+    
+    @api.onchange('province_id')
+    def _onchange_province_id(self):
+        self.municipality_id = False
+    
+    def getMunicipalityName(self):
+        if self.municipality_id:
+            return self.municipality_id.name
+        raise UserError('La Sucursal no tiene municipio asignado.')
     
     def getCode(self):
         return self.code

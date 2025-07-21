@@ -51,15 +51,15 @@
         <field name="arch" type="xml">
             <form duplicate="false">
                 <header>
-                    <button name="cuis_request" type="object" string="Solicitar cuis" icon="fa-play-circle" />
-                    <button name="button_update_cufd" type="object" string="Solicitar cufd" icon="fa-play-circle" />
-                    <button name="test_siat_connection" type="object" string="Verificar conexión con siat" icon="fa-play-circle" />
-                    <button name="open_pos_request" type="object" string="Abrir en siat" icon="fa-play-circle" invisible="transaccion" />
-                    <button name="delete_to_siat" type="object" string="Cerrar en siat" confirm="Cierra el punto de venta permanentemente" icon="fa-play-circle" invisible="not transaccion" />
+                    <button name="cuis_request" type="object" string="Solicitar CUIS" icon="fa-play-circle" />
+                    <button name="button_update_cufd" type="object" string="Solicitar CUFD" icon="fa-play-circle" />
+                    <button name="test_siat_connection" type="object" string="Verificar conexión con SIAT" icon="fa-play-circle" />
+                    <button name="open_pos_request" type="object" string="Abrir en SIAT" icon="fa-play-circle" invisible="transaccion" />
+                    <button name="delete_to_siat" type="object" string="Cerrar en SIAT" confirm="Cierra el punto de venta permanentemente" icon="fa-play-circle" invisible="not transaccion" />
                     
                     <button name="generateSequence" type="object" string="CREAR SECUENCIA" icon="fa-play-circle" invisible="not cufd_active" />
-                    <button name="action_offline" type="object" string="Fuera de linea" icon="fa-play-circle" invisible="emision_code ==2 or not emision_code"  />
-                    <button name="action_online" type="object" string="En linea" icon="fa-play-circle" invisible="emision_code ==1 or not emision_code"  />
+                    <button name="action_offline" type="object" string="Fuera de línea" icon="fa-play-circle" invisible="emision_code ==2 or not emision_code"  />
+                    <button name="action_online" type="object" string="En línea" icon="fa-play-circle" invisible="emision_code ==1 or not emision_code"  />
 
                     
                 </header>
@@ -77,7 +77,7 @@
                             <field name="emision_code" invisible="1"/>
                             <field name="pos_type_id" options="{'no_create': True, 'no_open': True}"/>
                         </group>
-                       <group>
+                        <group>
                             <field name="branch_office_id" invisible="1"/>
                             <field name="cuis_id"/>
                             <field name="cufd_id"/>

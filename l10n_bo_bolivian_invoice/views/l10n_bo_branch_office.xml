@@ -49,6 +49,9 @@
                         </group>
                         <group>
                             <field name="address"/>
+                            <field name="state_id" />
+                            <field name="province_id"  domain="[('state_id','=',state_id)]"/>
+                            <field name="municipality_id"  domain="[('city_id','=',province_id)]"/>
                         </group>
                     </group>
                     

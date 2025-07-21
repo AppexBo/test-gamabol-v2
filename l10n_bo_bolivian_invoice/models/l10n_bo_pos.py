@@ -165,9 +165,6 @@ class L10nBoPos(models.Model):
         copy=False
     )
 
-    
-
-    
     pos_type_id = fields.Many2one(
         string='Tipo',
         comodel_name='l10n.bo.type.point.sale',
@@ -298,7 +295,7 @@ class L10nBoPos(models.Model):
         if self.address:
             return self.address
         else:
-            raise UserError(f'El {self.name} no tiene una dirrección')
+            raise UserError(f'El {self.name} no tiene una dirección')
         
 
 
@@ -336,8 +333,8 @@ class L10nBoPos(models.Model):
     
     def test_siat_connection(self):
         if self.verificarComunicacion():
-            return self.showMessage('Coneccion exitosa','Coneccion exitosa con el SIAT')
-        return  self.showMessage('Coneccion fallida','No se tiene coneccion con la base de datos del SIAT') 
+            return self.showMessage('Conexión exitosa','Conexión exitosa con el SIAT')
+        return  self.showMessage('Conexión fallida','No se tiene conexión con la base de datos del SIAT') 
     
     
     transaccion = fields.Boolean(
@@ -488,13 +485,15 @@ class L10nBoPos(models.Model):
     @api.model
     def update_cufd(self):
         self = self.sudo()
-        pos_ids = self.with_company(1).search([])
-        if pos_ids:
-            if pos_ids[0].verificarComunicacion():
+        company_ids = self.env['res.company'].sudo().search([('enable_bo_edi','=',True)])
+        for company_id in company_ids:
+            pos_ids = self.with_company(company_id.id).sudo().search([('company_id','=',company_id.id)])
+            if pos_ids:
+                #if pos_ids[0].verificarComunicacion():
                 for pos_id in pos_ids:
                     pos_id.cufd_request(massive=True)
-            else:
-                return self.showMessage('ERROR','No hay coneccion con el SIAT')
+                #else:
+                #    return self.showMessage('ERROR','No hay coneccion con el SIAT')
 
 
     def getControlCode(self):

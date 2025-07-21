@@ -35,6 +35,9 @@ class PosConfig(models.Model):
         copy=False
     )
 
+    @api.onchange('branch_office_id')
+    def _onchange_branch_office_id(self):
+        self.pos_id = False 
     
     emision_id = fields.Many2one(
         string='Emision',

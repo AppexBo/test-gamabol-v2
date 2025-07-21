@@ -8,9 +8,9 @@
             <tr><td style="text-align: center"> <span t-field="o.company_id.name"/> </td></tr>
             <tr><td style="text-align: center"> <span t-field="o.branch_office_id.name"/> </td></tr>
             <tr><td style="text-align: center"> No. <span t-field="o.pos_id.name"/> </td></tr>
-            <tr><td style="text-align: center"> <span t-field="o.pos_id.address"/> </td></tr>
+            <tr><td style="text-align: center"> <span t-field="o.branch_office_id.address"/> </td></tr>
             <tr><td style="text-align: center"> Tel. <span t-field="o.company_id.phone"/> </td></tr>
-            <tr><td style="text-align: center"> <span t-field="o.company_id.municipality_id.name"/> </td></tr>
+            <tr><td style="text-align: center"> <span t-field="o.branch_office_id.municipality_id.name"/> </td></tr>
         </table>
         <b>-----------------------------------------------------------------</b>
         <table style="top:10px; width: 335px; font-size:13px; border: 1px solid white;">
@@ -24,7 +24,7 @@
             <t t-esc="o.cuf"/>
         </span>
         <b>-----------------------------------------------------------------</b>
-         
+        
         <table style="width: 335px; font-size:12px; font-family: sans-serif; border: 1px solid white;">
             <tr>
                 <td style="text-align: right; width: 167px;"> <b>NOMBRE/RAZÓN SOCIAL:</b> </td>
@@ -43,14 +43,12 @@
                 <td style="padding-left:10px;" ><span t-esc="o.get_formatted_datetime()"/> <span t-field="o.meridies" /> </td>
             </tr>
         </table>
-         
         <b>-----------------------------------------------------------------</b>
 
         <table style="width: 335px; font-size:12px; font-family: sans-serif; border: 1px solid white;">
             <tr style="text-align: center; font-size:13px;">
                 <th colspan="2">DETALLE</th>
                 <th/>
-                
             </tr>
             <tbody>
                         <t t-foreach="o.invoice_line_ids" t-as="line">
@@ -115,7 +113,6 @@
                 <td style="text-align: right; padding-right:10px; font-size:10px;"> <b>IMPORTE BASE CRÉDITO FISCAL Bs</b> </td>
                 <td style="text-align: right; padding-right:5px;"> <b t-esc="o.getAmountOnIva()" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2}"/> </td>
             </tr>
-             
             
         </table>
         <br/>

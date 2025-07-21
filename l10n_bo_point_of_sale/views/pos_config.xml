@@ -11,7 +11,7 @@
                         <setting string="Ajustes (BO)" help="Habilitar punto de venta fiscal" invisible="not adm_edi">
                                 <field name="enable_bo_edi"/>
                                 <div class="content-group pos_iot_config" invisible="not enable_bo_edi">
-                                    <div class="row iot_barcode_scanner" invisible="branch_office_id">
+                                    <div class="row iot_barcode_scanner">
                                         <label string="Sucursal" for="branch_office_id" class="col-lg-4 o_light_label"/>
                                         <field name="branch_office_id" options="{ 'no_open': True, 'no_create': True}" required="enable_bo_edi" />
                                     </div>

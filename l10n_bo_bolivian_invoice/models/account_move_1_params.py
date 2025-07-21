@@ -110,9 +110,9 @@ class AccountMoveParams(models.Model):
         if self.cuf:
             return self.cuf
         raise UserError('la factura no tiene generado un cuf')
-    
+
     def getMunicipality(self):
-        return self.company_id.getMunicipalityName()
+        return self.pos_id.branch_office_id.getMunicipalityName()
     
     def getPhone(self):
         return self.company_id.partner_id.getPhone()
@@ -127,7 +127,7 @@ class AccountMoveParams(models.Model):
         return self.pos_id.branch_office_id.getCode()
     
     def getAddress(self):
-        return self.pos_id.getAddress()
+        return self.pos_id.branch_office_id.getAddress()
     
     def getPosCode(self):
         return self.pos_id.getCode()

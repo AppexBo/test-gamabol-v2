@@ -23,51 +23,60 @@ class AccountMove(models.Model):
         readonly=True,
         store=True
     )
-    
-    
-    
+
     branch_office_id = fields.Many2one(
         string='Sucursal',
         comodel_name='l10n.bo.branch.office',
         ondelete='restrict',
-        default= lambda self : self.get_branch_office_default()
+        default=lambda self: self._default_branch_office()
     )
 
-
-    @api.model
-    def create(self, values):
-        account_move_id = super(AccountMove, self).create(values)
-        account_move_id.prepare_fields()
-        return account_move_id
-    
-
-    
-    @api.onchange('move_type')
-    @api.constrains('move_type')
-    def prepare_fields(self):
-        for record in self:
-            if record.edi_bo_invoice:
-                record.write(
-                    {
-                        'branch_office_id' : record.get_branch_office_default(),
-                        #'legend_id' : record.get_legend_default(record.company_id.getGrandParent().id if record.company_id else None )
-                    }
-                )
-                record._set_default_document_type()
-                
-    def get_branch_office_default(self):
-        branch_office_id = self.env['l10n.bo.branch.office'].search([('company_id','=',self.company_id.id)], limit=1)
-        if branch_office_id:
-            _logger.info(f"Sucursal por defecto:{branch_office_id.name}")
-            return branch_office_id.id
-        _logger.info("No se encontro una sucursal:")
-        return False
-    
-    
     pos_id = fields.Many2one(
         string='Punto de venta',
         comodel_name='l10n.bo.pos',
+        domain="[('branch_office_id', '=', branch_office_id)]"
     )
+
+    # Default dinámico para sucursal
+    @api.model
+    def _default_branch_office(self):
+        company = self.env.company
+        branches = self.env['l10n.bo.branch.office'].search([('company_id', '=', company.id)])
+        if len(branches) == 1:
+            return branches.id
+        return False
+
+    # Onchange para asignar sucursal y resetear POS si cambia
+    @api.onchange('edi_bo_invoice')
+    def _onchange_edi_bo_invoice(self):
+        if self.edi_bo_invoice and not self.branch_office_id:
+            self.branch_office_id = self._default_branch_office()
+
+    @api.onchange('branch_office_id')
+    def _onchange_branch_office_id(self):
+        if self.pos_id and self.pos_id.branch_office_id != self.branch_office_id:
+            self.pos_id = False
+
+    # Validación: POS debe pertenecer a la sucursal
+    @api.constrains('branch_office_id', 'pos_id')
+    def _check_pos_branch(self):
+        for rec in self:
+            if rec.pos_id and rec.pos_id.branch_office_id != rec.branch_office_id:
+                raise ValidationError(_("El Punto de Venta no pertenece a la sucursal seleccionada."))
+
+    # Crear sin doble escritura
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('edi_bo_invoice') and not vals.get('branch_office_id'):
+                default_branch = self._default_branch_office()
+                if default_branch:
+                    vals['branch_office_id'] = default_branch
+        moves = super().create(vals_list)
+        for move in moves:
+            if move.edi_bo_invoice:
+                move._set_default_document_type()
+        return moves
 
     
     emision_type_id = fields.Many2one(
@@ -164,25 +173,27 @@ class AccountMove(models.Model):
         for record in self:
             if record.edi_bo_invoice:
                 doc_type_id = False
-            
-                #raise UserError(record.move_type)
+
                 if record.move_type == 'out_invoice':
-                    #dt = record.pos_id.sequence_ids.filtered(lambda document_type_sequence : document_type_sequence.name.invoice_type_id.getCode() in [1,2,4])
                     if record.pos_id.sequence_ids:
-                        for sequence_id in record.pos_id.sequence_ids:
-                            if sequence_id.name.invoice_type_id.getCode() in [1,2,4]:
-                                doc_type_id = sequence_id.id
+                        for sequence in record.pos_id.sequence_ids:
+                            code = sequence.name.invoice_type_id.getCode()
+                            if code in [1, 2, 4]:
+                                doc_type_id = sequence.id
                                 break
-                
+
                 elif record.move_type == 'out_refund':
-                    dt = record.pos_id.sequence_ids.filtered(lambda document_type_sequence : document_type_sequence.name.invoice_type_id.getCode() == 3)[:1]
-                    if dt and record.document_type_id and record.document_type_id.name.invoice_type_id.getCode() != 3 :
-                        doc_type_id = dt.id
-                        record.write({'document_type_id' : doc_type_id})
-                
-                if doc_type_id and not record.document_type_id:
-                    record.write({'document_type_id' : doc_type_id})
-        
+                    dt = record.pos_id.sequence_ids.filtered(
+                        lambda seq: seq.name.invoice_type_id.getCode() == 3
+                    )
+                    if dt:
+                        dt_id = dt[0].id
+                        current_code = record.document_type_id.name.invoice_type_id.getCode() if record.document_type_id else None
+                        if current_code != 3:
+                            doc_type_id = dt_id
+
+                if doc_type_id and record.document_type_id != doc_type_id:
+                    record.document_type_id = doc_type_id
 
     
     payment_type_id = fields.Many2one(
