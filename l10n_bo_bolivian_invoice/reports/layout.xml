@@ -104,7 +104,7 @@
                 <t t-call="web.address_layout" />
                 <t t-raw="0" />
             </div>
-            <!-- <div class="footer">
+            <div class="footer">
                 <div style="font-size: 12px; text-align: right;">
                     <ul class="list-inline">
                         <li>
@@ -113,7 +113,7 @@
                         </li>
                     </ul>
                 </div>
-            </div> -->
+            </div>
         </template>
 
         <template id="l10n_invoice_document_roll">

@@ -119,28 +119,33 @@ class ResCompany(models.Model):
     )
     
     
-    # state_id = fields.Many2one(
-    #     string='Departamento',
-    #     comodel_name='res.country.state'
-    # )
+    state_id = fields.Many2one(
+        string='Departamento',
+        comodel_name='res.country.state'
+    )
 
-    # province_id = fields.Many2one(
-    #     string='Provincia',
-    #     comodel_name='res.city',
-    #     copy=False
-    # )
-
-    # municipality_id = fields.Many2one(
-    #     string='Municipio',
-    #     comodel_name='res.municipality',
-    #     copy=False
-    # )    
-
-    # def getMunicipalityName(self):
-    #     if self.municipality_id:
-    #         return self.municipality_id.name
-    #     raise UserError('Su compañia no tiene un municipo asignado.')
+    province_id = fields.Many2one(
+        string='Provincia',
+        comodel_name='res.city',
+        copy=False
+    )
     
+    
+    
+    
+
+    municipality_id = fields.Many2one(
+        string='Municipio',
+        comodel_name='res.municipality',
+        copy=False
+    )    
+
+    def getMunicipalityName(self):
+        if self.municipality_id:
+            return self.municipality_id.name
+        raise UserError('Su compañia no tiene un municipo asignado.')
+
+
 
     branch_office_id = fields.Many2one(
         string='Sucursal',
@@ -149,16 +154,17 @@ class ResCompany(models.Model):
 
     def add_company(self, company_id):
         for record in self:
-            catalog = record.env['l10n.bo.catalog.request'].sudo().search([('company_id','=',record.id)])
+            catalog = record.sudo().with_company(1).env['l10n.bo.catalog.request'].search([('company_id','=',record.id)])
             if catalog:
                 catalog.add_company(record, company_id)
 
 
     def quit_company(self, company_id):
         for record in self:
-            catalog = self.env['l10n.bo.catalog.request'].sudo().search([('company_id','=',record.id)])
+            catalog = self.sudo().with_company(1).env['l10n.bo.catalog.request'].search([('company_id','=',record.id)])
             if catalog:
                 catalog.quit_company(record, company_id)
+    
     
     #@api.onchange('branch_office_id')
     @api.constrains('branch_office_id')

@@ -34,9 +34,8 @@ class AccountMoveLine(models.Model):
 
     
 
-    def getDescription(self, to_xml=False):
-        stringCode = f"[{self.product_id.getCode()}]"
-        description = self.name.replace(stringCode, '').strip()
+    def getDescription(self, to_xml = False):
+        description : str = self.name
         description = description.replace('\n', ' ').replace('\r', '')
         if to_xml:
             return escape(description)

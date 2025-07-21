@@ -166,38 +166,8 @@ class L10nBoPos(models.Model):
     )
 
     
-    state_id = fields.Many2one(
-        string='Departamento',
-        comodel_name='res.country.state',
-        domain=lambda self: [('country_id', '=', self.env.company.country_id.id)]
-    )
 
-    province_id = fields.Many2one(
-        string='Provincia',
-        comodel_name='res.city',
-        copy=False
-    )
     
-    
-    
-    
-   
-    municipality_id = fields.Many2one(
-        string='Municipio',
-        comodel_name='res.municipality',
-        copy=False,
-    )   
-    @api.onchange('state_id')
-    def _onchange_state_id(self):
-        if self._origin and self.state_id and self.state_id != self._origin.state_id:
-            self.province_id = False
-            self.municipality_id = False
-    
-    def getMunicipalityName(self):
-        if self.municipality_id:
-            return self.municipality_id.name
-        raise UserError('El punto de venta seleccionado no tiene municipio asignado.')
-
     pos_type_id = fields.Many2one(
         string='Tipo',
         comodel_name='l10n.bo.type.point.sale',
@@ -518,15 +488,13 @@ class L10nBoPos(models.Model):
     @api.model
     def update_cufd(self):
         self = self.sudo()
-        company_ids = self.env['res.company'].sudo().search([('enable_bo_edi','=',True)])
-        for company_id in company_ids:
-            pos_ids = self.with_company(company_id.id).sudo().search([('company_id','=',company_id.id)])
-            if pos_ids:
-                #if pos_ids[0].verificarComunicacion():
+        pos_ids = self.with_company(1).search([])
+        if pos_ids:
+            if pos_ids[0].verificarComunicacion():
                 for pos_id in pos_ids:
                     pos_id.cufd_request(massive=True)
-                #else:
-                #    return self.showMessage('ERROR','No hay coneccion con el SIAT')
+            else:
+                return self.showMessage('ERROR','No hay coneccion con el SIAT')
 
 
     def getControlCode(self):

@@ -108,7 +108,7 @@ class ResPartner(models.Model):
         compute='_compute_enable_bo_edi' ,
     )
     
-    #@api.depends('company_type')
+    @api.depends('company_type')
     def _compute_enable_bo_edi(self):
         for record in self:
             record.enable_bo_edi = record.env.company.enable_bo_edi

@@ -38,14 +38,14 @@
                     <field name="amount_discount" optional="hide" readonly="1"  />    
                 </xpath>
                 <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='invoice_tab']/field[@name='invoice_line_ids']/tree[1]/field[@name='discount']" position="attributes">
-                    <attribute name="readonly">move_type in ["out_invoice", "in_invoice"]</attribute>
+                    <attribute name="readonly">move_type == "out_invoice"</attribute>
                 </xpath>
                 <xpath expr="//field[@name='price_subtotal']" position="before">
                     <button 
                         type="object" 
                         name="line_discount_wizard"
                         icon="fa-percent"    
-                        invisible="parent_state not in ['draft'] or move_type not in ['out_invoice','out_refund','in_invoice','in_refund']"
+                        invisible="parent_state not in ['draft'] or move_type not in ['out_invoice','out_refund']"
                     />
                 </xpath>
             </field>

@@ -3,6 +3,7 @@
     <template id="l10n_bo_invoice_purchase_sale_template">
         <t>
             <div >
+
                 <div class="row">
                     <div class="col-5 mb4">
                         <div class="text-center">
@@ -44,7 +45,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span t-field="o.pos_id.municipality_id.name"/>
+                                        <span t-field="o.company_id.municipality_id.name"/>
                                     </td>
                                 </tr>
                             </table>

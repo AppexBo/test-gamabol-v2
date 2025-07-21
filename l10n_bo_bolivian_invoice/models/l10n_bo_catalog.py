@@ -134,7 +134,7 @@ class CatalogRequest(models.Model):
     @api.model # DAILY
     def update_catalogs(self):
         self = self.sudo()
-        catalog_ids = self.env['l10n.bo.catalog.request'].sudo().search([])
+        catalog_ids = self.with_company(1).env['l10n.bo.catalog.request'].search([])
         for catalog_id in catalog_ids:
             _logger.info(f"Actualizando catalogo: {catalog_id.name}")
             catalog_id.button_process_all_siat(catalog_id.company_id)

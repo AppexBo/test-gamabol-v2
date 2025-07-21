@@ -42,10 +42,9 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span t-field="o.pos_id.municipality_id.name"/>
+                                        <span t-field="o.company_id.municipality_id.name"/>
                                     </td>
                                 </tr>
-                                
                             </table>
                         </div>
                     </div>

@@ -278,21 +278,26 @@ class AccountMove1(models.Model):
     def zip_edi_document(self, param):
         return gzip.compress(param)
 
+
     def generate_zip(self):
         success = False
-        while not success:
+        tries = 3
+        error = None
+        while tries>0 and not success:
             try:        
-                #raise UserError('Hola')
                 params_src = self.generate_xml().datas
                 params_src = base64.b64decode(params_src)
                 _logger.info(f"SRC para GZIP {params_src}")
-                #raise UserError(f"SRC para GZIP {params_src}")
                 self.write({'zip_edi_str': self.zip_edi_document(params_src)})
                 success = True
                 _logger.info('GZIP creado')
-            except:
+            except Exception as e:
                 success = False
-                _logger.info('Error al generar GZIP')
+                tries -= 1
+                error = e
+                _logger.info(f'Error al Generar GZIP: {e}')
+        if (tries<=0 or not success) and error:
+            raise UserError(f'ERROR AL GENERAR ARCHIVO ZIP: {error}')
 
     def soap_service(self, METHOD = None, SERVICE_TYPE = None, MODALITY_TYPE = None):
         PARAMS = [

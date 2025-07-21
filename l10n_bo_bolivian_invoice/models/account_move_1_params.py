@@ -100,6 +100,7 @@ class AccountMoveParams(models.Model):
         if self.sector_document_id:
             return self.sector_document_id.getCode()
         raise UserError('No tiene un Documento sector')
+    
     def getLegend(self):
         if self.legend_id:
             return self.legend_id.descripcionLeyenda
@@ -109,9 +110,9 @@ class AccountMoveParams(models.Model):
         if self.cuf:
             return self.cuf
         raise UserError('la factura no tiene generado un cuf')
-
+    
     def getMunicipality(self):
-        return self.pos_id.getMunicipalityName()
+        return self.company_id.getMunicipalityName()
     
     def getPhone(self):
         return self.company_id.partner_id.getPhone()
@@ -143,6 +144,4 @@ class AccountMoveParams(models.Model):
     
     def getCard(self):
         return self.card[:4]+'00000000'+self.card[-4:]
-    
-
     
