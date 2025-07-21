@@ -269,13 +269,39 @@ class ResPartner(models.Model):
             return getattr(self, METHOD)(WSDL_SERVICE)
         raise UserError(f'Servicio: {METHOD} no encontrado')
 
+    # def verificarNit(self, WSDL_SERVICE):
+    #     _branch = self.env.company.branch_office_id.code if self.env.company.branch_office_id else 0
+    #     _cuis = self.env['l10n.bo.pos'].search([('code','=',0),('company_id','=',self.env.company.id)]).getCuis()
+    #     if _cuis:
+    #         OBJECT = self._get_params_verify_nit(_branch,_cuis)
+    #         WSDL = WSDL_SERVICE.getWsdl()
+    #         TOKEN = self.env.company.getDelegateToken()
+    #         WSDL_RESPONSE = WSDL_SERVICE.process_soap_siat(WSDL, TOKEN, OBJECT, 'verificarNit')
+    #         return WSDL_RESPONSE
+    #     return {'success' : False}
     def verificarNit(self, WSDL_SERVICE):
-        _branch = self.env.company.branch_office_id.code if self.env.company.branch_office_id else 0
-        _cuis = self.env['l10n.bo.pos'].search([('code','=',0),('company_id','=',self.env.company.id)]).getCuis()
-        if _cuis:
-            OBJECT = self._get_params_verify_nit(_branch,_cuis)
+        branch = self.env.company.branch_office_id
+        if not branch:
+            raise UserError("La empresa no tiene una sucursal definida.")
+
+        # Buscar el punto de venta específico (ej. con código 0)
+        pos = self.env['l10n.bo.pos'].search([
+            ('code', '=', 0),
+            ('branch_office_id', '=', branch.id),
+            ('company_id', '=', self.env.company.id)
+        ], limit=1)
+
+        if not pos:
+            raise UserError("No se encontró el punto de venta con código 0 para la sucursal actual.")
+
+        # Obtener el CUIS de ese punto de venta
+        cuis = pos.getCuis()
+
+        if cuis:
+            OBJECT = self._get_params_verify_nit(branch.code, cuis)
             WSDL = WSDL_SERVICE.getWsdl()
             TOKEN = self.env.company.getDelegateToken()
             WSDL_RESPONSE = WSDL_SERVICE.process_soap_siat(WSDL, TOKEN, OBJECT, 'verificarNit')
             return WSDL_RESPONSE
-        return {'success' : False}
+
+        return {'success': False}
