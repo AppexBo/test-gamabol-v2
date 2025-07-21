@@ -94,11 +94,15 @@ class l10nBoCuis(models.Model):
     
     
 
+    # def getCode(self):
+    #     if self.name:
+    #         return self.name
+    #     raise UserError('No se encontro un CUIS valido')
     def getCode(self):
+        self.ensure_one()
         if self.name:
             return self.name
-        raise UserError('No se encontro un CUIS valido')
-    
+        raise UserError('No se encontró un CUIS válido')
 
     
     
