@@ -33,7 +33,11 @@ class PosOrder(models.Model):
     
 
     def get_payment_type_default(self):
-        pos_payment_ids = self.payment_ids.filtered(lambda line: line.payment_method_id.payment_type_id != False)
+       # pos_payment_ids = self.payment_ids.filtered(lambda line: line.payment_method_id.payment_type_id != False)
+        pos_payment_ids = self.payment_ids.filtered(
+            lambda line: line.payment_method_id.payment_type_id and not getattr(
+                line, 'is_change', False) and line.amount > 0
+        )
         _payment_type_ids = False
         _descripcion = False
         if pos_payment_ids:
