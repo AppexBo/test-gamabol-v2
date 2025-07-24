@@ -119,7 +119,8 @@ class AccountMove1(models.Model):
             #raise UserError(f"{edi_tree_signed}")
         else:
             edi_tree_signed = edi_str.encode('utf-8')
-        _name_file = f'{self.company_id.getNit()}-{self.name}'
+        safe_name = self.name.replace('/', '_')
+        _name_file = f'{self.company_id.getNit()}-{safe_name}.xml'
         attacht_id = self.env['ir.attachment'].search(
             [('res_model', '=', self._name), ('res_id', '=', self.id), ('name', '=', _name_file)], limit=1)
         if not attacht_id:
