@@ -245,16 +245,17 @@ class LocationSumm(models.Model):
 				for line in odr.lines:
 					for tax in line.tax_ids:
 						tax_name = tax.name
+						tax_amount = (tax.amount / 100) * line.price_subtotal_incl
+						
 						if tax_name in tax_data:
-							old_valor_total = tax_data[tax_name].valor_total
-							tax_data.update({ tax_name : {
-								'valor_total': old_valor_total + ((tax.amount/100) * line.price_subtotal_incl)
-							}})
+							# Si el impuesto ya existe, sumamos al valor existente
+							tax_data[tax_name]['valor_total'] += tax_amount
 						else:
-							tax_data.append({
-								'name': tax.name,
-								'valor_total': (tax.amount/100) * line.price_subtotal_incl
-							})
+							# Si no existe, lo creamos
+							tax_data[tax_name] = {
+								'name': tax_name,
+								'valor_total': tax_amount
+							}
 					
 			final_data.update({
 				'Metodos_de_Pago': info_payment,
