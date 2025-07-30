@@ -183,58 +183,7 @@
 
 
 
-                        <t t-if="taxes" id="taxe_sales">
-                            <h3>Taxes on sales</h3>
-                            <table class="table table-sm">
-                                <thead><tr>
-                                    <th class="text-start">Name</th>
-                                    <th class="text-end">Tax Amount</th>
-                                    <th class="text-end">Base Amount</th>
-                                </tr></thead>
-                                <tbody>
-                                <tr t-foreach="taxes" t-as="tax">
-                                    <td><span t-out="tax['name']">Demo Name</span></td>
-                                    <td class="text-end">
-                                        <t t-if="currency['position']">
-                                            <span t-out="tax['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span><span t-out="currency[&quot;symbol&quot;]">$</span>
-                                        </t>
-                                        <t t-else="">
-                                            <span t-out="currency[&quot;symbol&quot;]">$</span><span t-out="tax['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
-                                        </t>
-
-                                    </td>
-                                    <td class="text-end">
-                                        <t t-if="currency['position']">
-                                            <span t-out="tax['base_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span><span t-out="currency[&quot;symbol&quot;]">$</span>
-                                        </t>
-                                        <t t-else="">
-                                            <span t-out="currency[&quot;symbol&quot;]">$</span><span t-out="tax['base_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
-                                        </t>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="background-color: #b1b1b1;"><strong>Total</strong></td>
-                                    <td class="text-end" style="background-color: #b1b1b1;">
-                                        <t t-if="currency['position']">
-                                            <strong><span t-out="taxes_info[&quot;tax_amount&quot;]" t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span><span t-out="currency[&quot;symbol&quot;]">$</span></strong>
-                                        </t>
-                                        <t t-else="">
-                                            <strong><span t-out="currency[&quot;symbol&quot;]">$</span><span t-out="taxes_info[&quot;tax_amount&quot;]" t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span></strong>
-                                        </t>
-                                    </td>
-                                    <td class="text-end" style="background-color: #b1b1b1;">
-                                        <t t-if="currency['position']">
-                                            <strong><span t-out="taxes_info[&quot;base_amount&quot;]" t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span><span t-out="currency[&quot;symbol&quot;]">$</span></strong>
-                                        </t>
-                                        <t t-else="">
-                                            <strong><span t-out="currency[&quot;symbol&quot;]">$</span><span t-out="taxes_info[&quot;base_amount&quot;]" t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span></strong>
-                                        </t>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div class="oe_structure"/>
-                        </t>
+                        
 
 
 

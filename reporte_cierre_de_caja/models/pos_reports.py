@@ -220,9 +220,28 @@ class LocationSumm(models.Model):
 				'Estado': session_id.state,
 				'Total_en_Bruto': session_id.total_payments_amount,
 			})
+			taxes_amount = {}
+
 			for odr in orders:
 				tax_total +=  odr.amount_tax
 				for line in odr.payment_ids:
+					
+					for tax in line.tax_ids_after_fiscal_position:
+					tax_id = tax.id
+					tax_amount = line.price_subtotal * tax.amount / 100
+					
+					if tax_id in taxes_amount:
+						taxes_amount[tax_id]['amount'] += tax_amount
+						taxes_amount[tax_id]['base'] += line.price_subtotal
+					else:
+						taxes_amount[tax_id] = {
+							'name': tax.name,
+							'amount': tax_amount,
+							'base': line.price_subtotal,
+							'rate': tax.amount,
+							'tax_id': tax_id
+						}
+					
 					payment_metod_info = line.payment_method_id.name
 					if payment_metod_info in info_payment:
 						old_qty = info_payment[payment_metod_info]['qty']
