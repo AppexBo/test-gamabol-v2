@@ -222,22 +222,7 @@ class LocationSumm(models.Model):
 			})
 			for odr in orders:
 				tax_total +=  odr.amount_tax
-				for line in odr.payment_ids:
-					#taxes = line.tax_ids_after_fiscal_position
-					#for tax in taxes:
-					_logger.info(f"data de linea: {line}") 
-
-
-					# Para ver TODOS los campos disponibles (nativo)
-					line_fields = line._fields.keys()
-					for field in line_fields:
-						try:
-							value = line[field]
-							_logger.info(f"{field}: {value}")
-						except:
-							_logger.warning(f"No se pudo leer el campo {field}")
-
-
+				for line in odr.payment_ids:	#esto es para la parte de pagos
 					payment_metod_info = line.payment_method_id.name
 					if payment_metod_info in info_payment:
 						old_qty = info_payment[payment_metod_info]['qty']
@@ -256,6 +241,14 @@ class LocationSumm(models.Model):
 						'payment_date': line.payment_date.strftime("%m-%d %H:%M"), 
 						'account_move': odr.account_move.name
 					})
+				for line in odr.lines:
+					line_fields = line._fields.keys()
+					for field in line_fields:
+						try:
+							value = line[field]
+							_logger.info(f"{field}: {value}")
+						except:
+							_logger.warning(f"No se pudo leer el campo {field}")
 			final_data.update({
 				'Metodos_de_Pago': info_payment,
 				'Tax': tax_total,
