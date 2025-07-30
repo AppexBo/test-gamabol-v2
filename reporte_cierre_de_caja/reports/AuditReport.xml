@@ -198,16 +198,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <t t-foreach="form['Impuestos_Detallados']" t-as="impuesto_key" t-key="impuesto_key">
-                                    <tr t-foreach="form['Impuestos_Detallados'][impuesto_key]" t-as="tax" t-key="tax_index">
-                                        <td style="border: 1px solid black;">
-                                            <t t-esc="tax.get('name', '')"/>
-                                        </td>
-                                        <td style="border: 1px solid black;">
-                                            <t t-esc="'%.2f' % float(tax.get('valor_total', 0))"/>
-                                        </td>
-                                    </tr>
-                                </t>
+                                <tbody>
+                                    <t t-foreach="form['Impuestos_Detallados'].items()" t-as="impuesto" t-key="impuesto[0]">
+                                        <tr>
+                                            <td style="border: 1px solid black;">
+                                                <t t-esc="impuesto[1]['name']"/>
+                                            </td>
+                                            <td style="border: 1px solid black;">
+                                                <t t-esc="'%.2f' % float(impuesto[1]['valor_total'])"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
                             </tbody>
                         </table>
                     
