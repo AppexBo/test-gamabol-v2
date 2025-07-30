@@ -182,7 +182,45 @@
                         </t>
 
 
-
+                        <div class="pos-receipt-center-align">
+                            <strong>Impuestos</strong>
+                        </div>
+                        
+                        <t t-foreach="form['Impuestos']" t-as="impuesto_key" t-key="impuesto_key">
+                            <div class="pos-receipt-center-align">
+                                <strong><t t-esc="form['Impuestos'][impuesto_key]['name']"/></strong>
+                            </div>
+                            
+                            <t t-if="form['Impuestos'][impuesto_key].get('extra_data')">
+                                <table class='orderlines' style="width: 100%; font-size: 10px; text-align: left; margin: 0px auto; border-collapse: collapse;">
+                                    <colgroup>
+                                        <col width='20%' />
+                                        <col width='20%' />
+                                        <col width='30%' />
+                                    </colgroup>
+                                    <thead>
+                                        <tr >
+                                            <th style="border: 1px solid black;">Nombre</th>
+                                            <th style="border: 1px solid black;">Monto</th>
+                                            <th style="border: 1px solid black;">Monto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="form['Impuestos'][impuesto_key]" t-as="impuesto" t-key="pago_index">
+                                            <td style="border: 1px solid black;">
+                                                <t t-esc="impuesto.get('name', '')"/>
+                                            </td>
+                                            <td style="border: 1px solid black;">
+                                                <t t-esc="'%.2f' % float(impuesto.get('rate', 0))"/>
+                                            </td>
+                                            <td style="border: 1px solid black;">
+                                                
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </t>
                         
 
 

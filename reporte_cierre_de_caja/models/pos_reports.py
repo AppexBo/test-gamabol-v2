@@ -220,6 +220,7 @@ class LocationSumm(models.Model):
 				'Estado': session_id.state,
 				'Total_en_Bruto': session_id.total_payments_amount,
 			})
+
 			taxes_amount = {}
 
 			for odr in orders:
@@ -227,20 +228,20 @@ class LocationSumm(models.Model):
 				for line in odr.payment_ids:
 					
 					for tax in line.tax_ids_after_fiscal_position:
-					tax_id = tax.id
-					tax_amount = line.price_subtotal * tax.amount / 100
-					
-					if tax_id in taxes_amount:
-						taxes_amount[tax_id]['amount'] += tax_amount
-						taxes_amount[tax_id]['base'] += line.price_subtotal
-					else:
-						taxes_amount[tax_id] = {
-							'name': tax.name,
-							'amount': tax_amount,
-							'base': line.price_subtotal,
-							'rate': tax.amount,
-							'tax_id': tax_id
-						}
+						tax_id = tax.id
+						tax_amount = line.price_subtotal * tax.amount / 100
+						
+						if tax_id in taxes_amount:
+							taxes_amount[tax_id]['amount'] += tax_amount
+							taxes_amount[tax_id]['base'] += line.price_subtotal
+						else:
+							taxes_amount[tax_id] = {
+								'name': tax.name,
+								'amount': tax_amount,
+								'base': line.price_subtotal,
+								'rate': tax.amount,
+								'tax_id': tax_id
+							}
 					
 					payment_metod_info = line.payment_method_id.name
 					if payment_metod_info in info_payment:
@@ -262,6 +263,7 @@ class LocationSumm(models.Model):
 					})
 			final_data.update({
 				'Metodos_de_Pago': info_payment,
+				'Impuestos': taxes_amount,
 				'Tax': tax_total,
 				'Descuento': descuentos,
 			})
