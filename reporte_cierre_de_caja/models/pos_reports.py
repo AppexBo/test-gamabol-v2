@@ -244,8 +244,16 @@ class LocationSumm(models.Model):
 					})
 				for line in odr.lines:
 					for tax in line.tax_ids:
+						if tax.amount_type == "grupo":
+							total_porcentaje = 0
+							for children_tax_id in tax.children_tax_ids:
+								if children_tax_id.amount > 0:
+									total_porcentaje += children_tax_id.amount
+						else:
+							total_porcentaje = tax.amount
+
 						tax_name = tax.name
-						tax_amount = (tax.amount / 100) * line.price_subtotal_incl
+						tax_amount = (total_porcentaje / 100) * line.price_subtotal_incl
 						
 						if tax_name in tax_data:
 							old_amount = tax_data[tax_name]['valor_total']
