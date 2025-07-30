@@ -226,7 +226,9 @@ class LocationSumm(models.Model):
 
 					taxes = line.tax_ids_after_fiscal_position
 					for tax in taxes:
-            			_logger.info(f"asdasdasdasdasssssssssssssssssssssssssssssssssssssssss: {tax}")
+            			_logger.info(f"Impuesto encontrado: {tax.name}") 
+						
+						
 					payment_metod_info = line.payment_method_id.name
 					if payment_metod_info in info_payment:
 						old_qty = info_payment[payment_metod_info]['qty']
