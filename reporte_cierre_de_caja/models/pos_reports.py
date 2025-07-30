@@ -226,6 +226,20 @@ class LocationSumm(models.Model):
 					#taxes = line.tax_ids_after_fiscal_position
 					#for tax in taxes:
 					_logger.info(f"data de linea: {line}") 
+
+
+					# Para ver TODOS los campos disponibles (nativo)
+					line_fields = line.fields_get_keys()
+					for field in line_fields:
+						try:
+							value = line[field]
+							_logger.info(f"{field}: {value}")
+						except:
+							_logger.warning(f"No se pudo leer el campo {field}")
+
+
+
+
 					payment_metod_info = line.payment_method_id.name
 					if payment_metod_info in info_payment:
 						old_qty = info_payment[payment_metod_info]['qty']
