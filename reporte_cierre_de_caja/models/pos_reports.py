@@ -193,7 +193,7 @@ class LocationSumm(models.Model):
 			'Tax': None,
 			'Estado': None,
 			'Metodos_de_Pago': [],
-			
+			'Impuestos_Detallados': [],
 		}
 
 		prod_data = {}
@@ -220,6 +220,7 @@ class LocationSumm(models.Model):
 				'Estado': session_id.state,
 				'Total_en_Bruto': session_id.total_payments_amount,
 			})
+			tax_data = []
 			for odr in orders:
 				tax_total +=  odr.amount_tax
 				for line in odr.payment_ids:	#esto es para la parte de pagos
@@ -242,17 +243,19 @@ class LocationSumm(models.Model):
 						'account_move': odr.account_move.name
 					})
 				for line in odr.lines:
-					line_fields = line._fields.keys()
-					for field in line_fields:
-						try:
-							value = line[field]
-							_logger.info(f"{field}: {value}")
-						except:
-							_logger.warning(f"No se pudo leer el campo {field}")
+					for tax in line.tax_id:
+						tax_data.append({
+							'name': tax.name,
+							'amount': tax.amount,
+							'price_unit': line.price_unit,
+							'quantity': line.product_uom_qty,
+						})
+					
 			final_data.update({
 				'Metodos_de_Pago': info_payment,
 				'Tax': tax_total,
 				'Descuento': descuentos,
+				'Impuestos_Detallados': tax_data,
 			})
 			return final_data
 		else:
