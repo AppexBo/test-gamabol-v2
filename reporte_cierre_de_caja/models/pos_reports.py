@@ -243,7 +243,7 @@ class LocationSumm(models.Model):
 						'account_move': odr.account_move.name
 					})
 				for line in odr.lines:
-					for tax in line.tax_id:
+					for tax in line.tax_ids:
 						tax_data.append({
 							'name': tax.name,
 							'amount': tax.amount,
