@@ -244,7 +244,7 @@ class LocationSumm(models.Model):
 					})
 				for line in odr.lines:
 					for tax in line.tax_ids:
-						if tax.amount_type == "grupo":
+						if tax.amount_type == "group":
 							total_porcentaje = 0
 							for children_tax_id in tax.children_tax_ids:
 								if children_tax_id.amount > 0:
