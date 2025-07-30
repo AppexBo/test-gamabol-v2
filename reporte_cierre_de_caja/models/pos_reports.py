@@ -248,14 +248,16 @@ class LocationSumm(models.Model):
 						tax_amount = (tax.amount / 100) * line.price_subtotal_incl
 						
 						if tax_name in tax_data:
-							# Si el impuesto ya existe, sumamos al valor existente
-							tax_data[tax_name]['valor_total'] += tax_amount
+							old_amount = tax_data[tax_name]['valor_total']
+							tax_data[tax_name].update({
+								'valor_total' : old_amount + tax_amount,
+							})
 						else:
 							# Si no existe, lo creamos
-							tax_data[tax_name] = {
+							tax_data.update({ tax_name : {
 								'name': tax_name,
-								'valor_total': tax_amount
-							}
+								'valor_total' : tax_amount,
+							}})
 					
 			final_data.update({
 				'Metodos_de_Pago': info_payment,
