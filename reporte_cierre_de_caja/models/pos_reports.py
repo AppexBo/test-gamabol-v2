@@ -247,6 +247,7 @@ class LocationSumm(models.Model):
 						tax_data.append({
 							'name': tax.name,
 							'amount': tax.amount,
+							'valor_total': (tax.amount/100) * line.price_subtotal_incl
 						})
 					
 			final_data.update({
