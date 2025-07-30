@@ -193,7 +193,8 @@ class LocationSumm(models.Model):
 			'Tax': None,
 			'Estado': None,
 			'Metodos_de_Pago': [],
-			
+			'Impuestos_Detallados': [],  # Nueva clave para los impuestos detallados
+        	'Totales_Impuestos': {}      # Nueva clave para los totales
 		}
 
 		prod_data = {}
@@ -209,6 +210,7 @@ class LocationSumm(models.Model):
 					('session_id', '=', session_id.id),
 					('state', 'in', ['paid','invoiced','done']),
 					])
+
 			final_data.update({
 				'Sesion': session_id.name,
 				'Abierto_por': session_id.user_id.name,
@@ -221,28 +223,43 @@ class LocationSumm(models.Model):
 				'Total_en_Bruto': session_id.total_payments_amount,
 			})
 
-			taxes_amount = {}
-
+			taxes_dict = {}
+			taxes_info = {
+				'tax_amount': 0.0,
+				'base_amount': 0.0
+			}
+			
 			for odr in orders:
 				tax_total +=  odr.amount_tax
 				for line in odr.payment_ids:
-					
-					for tax in line.tax_ids_after_fiscal_position:
-						tax_id = tax.id
-						tax_amount = line.price_subtotal * tax.amount / 100
+
+					taxes = line.tax_ids.compute_all(
+						line.price_unit * (1 - (line.discount or 0.0) / 100.0),
+						currency=odr.pricelist_id.currency_id,
+						quantity=line.qty,
+						product=line.product_id,
+						partner=odr.partner_id
+					)
+
+					for tax in taxes['taxes']:
+						tax_id = self.env['account.tax'].browse(tax['id'])
+						tax_name = tax_id.name
+						tax_amount = tax['amount']
+						base_amount = tax['base']
 						
-						if tax_id in taxes_amount:
-							taxes_amount[tax_id]['amount'] += tax_amount
-							taxes_amount[tax_id]['base'] += line.price_subtotal
-						else:
-							taxes_amount[tax_id] = {
-								'name': tax.name,
-								'amount': tax_amount,
-								'base': line.price_subtotal,
-								'rate': tax.amount,
-								'tax_id': tax_id
+						if tax_name not in taxes_dict:
+							taxes_dict[tax_name] = {
+								'name': tax_name,
+								'tax_amount': 0.0,
+								'base_amount': 0.0
 							}
-					
+						
+						taxes_dict[tax_name]['tax_amount'] += tax_amount
+						taxes_dict[tax_name]['base_amount'] += base_amount
+						
+						taxes_info['tax_amount'] += tax_amount
+						taxes_info['base_amount'] += base_amount
+
 					payment_metod_info = line.payment_method_id.name
 					if payment_metod_info in info_payment:
 						old_qty = info_payment[payment_metod_info]['qty']
@@ -263,9 +280,10 @@ class LocationSumm(models.Model):
 					})
 			final_data.update({
 				'Metodos_de_Pago': info_payment,
-				'Impuestos': taxes_amount,
 				'Tax': tax_total,
 				'Descuento': descuentos,
+				'Impuestos_Detallados': list(taxes_dict.values()),  # Lista de impuestos detallados
+            	'Totales_Impuestos': taxes_info                   # Totales generales
 			})
 			return final_data
 		else:
