@@ -247,8 +247,6 @@ class LocationSumm(models.Model):
 						tax_data.append({
 							'name': tax.name,
 							'amount': tax.amount,
-							'price_unit': line.price_unit,
-							'quantity': line.product_uom_qty,
 						})
 					
 			final_data.update({
