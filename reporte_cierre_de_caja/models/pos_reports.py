@@ -229,15 +229,13 @@ class LocationSumm(models.Model):
 
 
 					# Para ver TODOS los campos disponibles (nativo)
-					line_fields = line.fields_get_keys()
+					line_fields = line._fields.keys()
 					for field in line_fields:
 						try:
 							value = line[field]
 							_logger.info(f"{field}: {value}")
 						except:
 							_logger.warning(f"No se pudo leer el campo {field}")
-
-
 
 
 					payment_metod_info = line.payment_method_id.name
