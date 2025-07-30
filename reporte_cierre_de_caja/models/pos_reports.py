@@ -220,7 +220,7 @@ class LocationSumm(models.Model):
 				'Estado': session_id.state,
 				'Total_en_Bruto': session_id.total_payments_amount,
 			})
-			tax_data = []
+			tax_data = {}
 			for odr in orders:
 				tax_total +=  odr.amount_tax
 				for line in odr.payment_ids:	#esto es para la parte de pagos
