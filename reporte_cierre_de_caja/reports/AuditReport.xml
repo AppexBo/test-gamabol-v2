@@ -94,10 +94,11 @@
                                     <strong>Total Descuentos: </strong> <t t-esc="'%.2f' % float(form.get('Descuento', 0))"/>
                                 </div>
                                 -->
+                                <!--
                                 <div>
                                     <strong>Total Impuestos: </strong> <t t-esc="'%.2f' % float(form.get('Tax', 0))"/>
                                 </div>
-                                
+                                -->
                                 <div>
                                     <strong>Total Ventas: </strong> <t t-esc="'%.2f' % float(form.get('Total_en_Bruto', 0))"/>
                                 </div>
