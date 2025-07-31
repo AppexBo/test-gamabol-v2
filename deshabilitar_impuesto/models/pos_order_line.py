@@ -18,4 +18,7 @@ class PosOrderLine(models.Model):
         #    _logger.info("No POS Order found with id %s", vals.get('order_id'))
         if order and not(order.to_invoice):
             _logger.info("Data de la line de orden: %s", vals)
+            vals['tax_ids'] = [[6, False, []]]
+            _logger.info("Data de la line de orden: %s", vals)
+
         return super(PosOrderLine, self).create(vals)
