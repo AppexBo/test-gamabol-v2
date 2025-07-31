@@ -9,14 +9,13 @@ class PosOrderLine(models.Model):
     
     @api.model
     def create(self, vals):
-        _logger.info("DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: %s", vals)
         order = self.env['pos.order'].search([('id', '=', vals.get('order_id'))], limit=1)
-        _logger.info("DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: %s", order)
-        if order:
-            order_data = order.read()[0]  # Get all fields as a dictionary
-            _logger.info("POS Order data: %s", order_data)
-        else:
-            _logger.info("No POS Order found with id %s", vals.get('order_id'))
-        #if order and order.to_invoiced:
-        #    _logger.info("CREATING PosOrderLine with values: %s", vals)
+        #para lectura del contenido de orer
+        #if order:
+        #    order_data = order.read()[0]  # Get all fields as a dictionary
+        #    _logger.info("POS Order data: %s", order_data)
+        #else:
+        #    _logger.info("No POS Order found with id %s", vals.get('order_id'))
+        if order and not(order.to_invoice):
+            _logger.info("Data de la line de orden: %s", vals)
         return super(PosOrderLine, self).create(vals)
