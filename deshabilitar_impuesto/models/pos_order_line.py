@@ -19,6 +19,7 @@ class PosOrderLine(models.Model):
         if order and not(order.to_invoice):
             #_logger.info("Data de la line de orden: %s", vals)
             vals['tax_ids'] = [[6, False, []]]
+            vals['price_subtotal'] = vals["price_subtotal_incl"]
             #_logger.info("Data de la line de orden: %s", vals)
 
         return super(PosOrderLine, self).create(vals)
