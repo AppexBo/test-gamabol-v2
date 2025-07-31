@@ -13,6 +13,7 @@ class PosOrderLine(models.Model):
         order = self.env['pos.order'].search([('id', '=', vals.get('order_id'))], limit=1)
         _logger.info("DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: %s", order)
         _logger.info("DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: %s", order.is_invoiced)
-        if order and order.is_invoiced:
+        _logger.info("DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA: %s", order.to_invoiced)
+        if order and order.to_invoiced:
             _logger.info("CREATING PosOrderLine with values: %s", vals)
         return super(PosOrderLine, self).create(vals)
