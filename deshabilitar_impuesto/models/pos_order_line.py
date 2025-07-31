@@ -17,6 +17,6 @@ class PosOrderLine(models.Model):
             _logger.info("POS Order data: %s", order_data)
         else:
             _logger.info("No POS Order found with id %s", vals.get('order_id'))
-        if order and order.to_invoiced:
-            _logger.info("CREATING PosOrderLine with values: %s", vals)
+        #if order and order.to_invoiced:
+        #    _logger.info("CREATING PosOrderLine with values: %s", vals)
         return super(PosOrderLine, self).create(vals)
