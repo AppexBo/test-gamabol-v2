@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 {
     'name': 'Módulo Appex, Descuentos y lealtad FE BO',
-    'version': '1.2',
+    'version': '2.2',
     'author': 'APPEX BOLIVIA SRL.',
     'category': 'Point of Sale',
     'depends': [
@@ -18,7 +18,7 @@
         'Cambios visuales y correcciones minimas.\n\n'
         'sobre una lista de productos específica '
         'en el Punto de Venta (POS),'
-        'basadas en reglas configurables desde el sistema de lealtad (pos.loyalty.rule)..'
+        'basadas en reglas configurables desde el sistema de lealtad (loyalty.rule)..'
         'lorem ipsum.\n\n'
     ),
     'data': [
