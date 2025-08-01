@@ -6,6 +6,7 @@
     'category': 'Point of Sale',
     'depends': [
         'point_of_sale',
+        'loyalty',
     ],
     'license': 'LGPL-3',
     'summary': (

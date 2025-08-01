@@ -4,7 +4,7 @@ class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     def _apply_2x1_promotion(self):
-        rules = self.env['pos.loyalty.rule'].search([('is_multi_2x1', '=', True)])
+        rules = self.env['loyalty.rule'].search([('is_multi_2x1', '=', True)])
 
         for rule in rules:
             promo_products = rule.product_ids.ids
