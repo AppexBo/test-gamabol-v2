@@ -7,7 +7,7 @@
     <field name="inherit_id" ref="loyalty.loyalty_rule_view_form" />
     <field name="arch" type="xml">
       <xpath expr="//field[@name='minimum_qty']" position="after">
-        <field name="is_multi_2x1" />
+        <field name="apply_multiple" />
       </xpath>
     </field>
   </record>

@@ -6,7 +6,7 @@
     'category': 'Point of Sale',
     'depends': [
         'point_of_sale',
-        'loyalty',
+        
     ],
     'license': 'LGPL-3',
     'summary': (
@@ -24,6 +24,11 @@
     'data': [
         'views/pos_loyalty_rule_views.xml',
     ],
+    'assets': {
+        'point_of_sale._assets_pos': [
+            'appex_promociones_pos/static/src/js/pos_multi_2x1.js',
+        ],
+    },
 
     'installable': True,
     'application': False,
