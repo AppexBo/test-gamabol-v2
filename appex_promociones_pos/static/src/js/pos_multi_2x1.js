@@ -2,10 +2,16 @@
 
 import { patch } from "@web/core/utils/patch";
 import { Order } from "@point_of_sale/app/store/models";
+import { _t } from "@web/core/l10n/translation";
+
 
 // Parchea Order para aplicar descuentos múltiples si la regla lo permite
 patch(Order.prototype, {
     _getRewardLineValuesDiscount(args) {
+        function _newRandomRewardCode() {
+            return (Math.random() + 1).toString(36).substring(3);
+        }
+
         const reward = args["reward"];
         const coupon_id = args["coupon_id"];
         const rewardAppliesTo = reward.discount_applicability;
@@ -119,5 +125,6 @@ patch(Order.prototype, {
 
         return result;
     },
+
 
 });
