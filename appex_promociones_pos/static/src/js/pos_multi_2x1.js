@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { patch } from "@web/core/utils/patch";
-import { LoyaltyLoader } from "@point_of_sale/app/models/loyalty_loader";
+import { LoyaltyLoader } from "@point_of_sale/app/store/pos_store";
 
 // Interceptamos el momento en que se procesan los datos de lealtad
 patch(LoyaltyLoader.prototype, {
