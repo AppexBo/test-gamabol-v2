@@ -8,16 +8,71 @@ import { _t } from "@web/core/l10n/translation";
 // Parchea Order para aplicar descuentos múltiples si la regla lo permite
 patch(Order.prototype, {
 
+
     _getRewardLineValuesDiscount(args) {
         function _newRandomRewardCode() {
             return (Math.random() + 1).toString(36).substring(3);
         }
 
+        function getDiscountableOnMultiple(reward) {
+            const rules = reward.program_id.rules || [];
+            const linesToDiscount = [];
+            const remainingAmountPerLine = {};
+            const orderLines = this.get_orderlines();
+
+            for (const line of orderLines) {
+                if (!line.get_quantity() || !line.price) continue;
+
+                const product_id = line.comboParent?.product.id || line.get_product().id;
+
+                // Buscar si alguna regla aplica a este producto
+                const rule = rules.find(rule => {
+                    return (
+                        rule.product_ids?.includes(product_id) ||
+                        rule.category_ids?.some(catId => line.get_product().pos_categ_id?.[0] === catId)
+                    );
+                });
+
+                if (rule) {
+                    linesToDiscount.push(line);
+                    remainingAmountPerLine[line.cid] = line.get_price_with_tax();
+                }
+            }
+
+            let discountable = 0;
+            const discountablePerTax = {};
+
+            for (const line of linesToDiscount) {
+                discountable += remainingAmountPerLine[line.cid];
+                const taxKey = line.get_taxes().map((t) => t.id);
+                if (!discountablePerTax[taxKey]) {
+                    discountablePerTax[taxKey] = 0;
+                }
+                discountablePerTax[taxKey] += line.get_base_price() * (remainingAmountPerLine[line.cid] / line.get_price_with_tax());
+            }
+
+            return {
+                discountable,
+                discountablePerTax
+            };
+        };
+
         const reward = args["reward"];
         const coupon_id = args["coupon_id"];
+
+
+
         const rewardAppliesTo = reward.discount_applicability;
         let getDiscountable;
-        if (rewardAppliesTo === "order") {
+        const rules = reward.program_id.rules || [];
+
+        // Detectar si alguna regla tiene apply_multiple
+        const useMultiple = rules.some(rule => rule.apply_multiple);
+
+        if (useMultiple) {
+            console.log('Se aplicó useMultiple')
+            getDiscountable = this.getDiscountableOnMultiple.bind(this);
+        } else if (rewardAppliesTo === "order") {
             getDiscountable = this._getDiscountableOnOrder.bind(this);
         } else if (rewardAppliesTo === "cheapest") {
             getDiscountable = this._getDiscountableOnCheapest.bind(this);
