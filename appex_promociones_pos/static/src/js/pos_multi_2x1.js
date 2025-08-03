@@ -108,4 +108,41 @@ patch(Order.prototype, {
         console.log("Promociones encontradas:", result);
         return result;
     },
+    async _applyReward(reward, coupon_id) {
+        // Cantidad de veces que debe aplicarse esta promoción
+        const qty = reward.potentialQty || 1;
+
+        for (let i = 0; i < qty; i++) {
+            const rewardLineVals =
+                reward.reward_type === "product"
+                    ? this._getRewardLineValuesProduct({ reward, coupon_id })
+                    : this._getRewardLineValuesDiscount({ reward, coupon_id });
+
+            if (typeof rewardLineVals === "string") {
+                this.env.services.notification.add(rewardLineVals, {
+                    type: "warning",
+                });
+                continue;
+            }
+
+            for (const lineVals of rewardLineVals) {
+                const product = lineVals.product;
+                if (!product) continue;
+
+                this.add_product(product, {
+                    price: lineVals.price,
+                    quantity: lineVals.quantity || 1,
+                    extras: {
+                        reward_id: reward.id,
+                        is_reward_line: true,
+                        coupon_id: coupon_id,
+                        reward_identifier_code: lineVals.reward_identifier_code,
+                        merge: false,
+                        tax_ids: lineVals.tax_ids || lineVals.taxIds || [],
+                        points_cost: lineVals.points_cost || 0,
+                    },
+                });
+            }
+        }
+    },
 });
