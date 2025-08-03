@@ -2,35 +2,48 @@
 
 import { patch } from "@web/core/utils/patch";
 import { Order } from "@point_of_sale/app/store/models";
-import { updateRewardsMutex } from "@point_of_sale/app/store/mutex";
 
 patch(Order.prototype, {
-    async _updateRewards() {
-        if (this.pos.programs.length === 0) {
-            return;
-        }
+    getClaimableRewards(onlyManual, withCoupon, skipAppliedRewards) {
+        const rewards = [];
+        const order = this;
+        const orderlines = order.orderlines;
 
-        console.log("🔁 Ejecutando _updateRewards (custom)");
+        for (const program of order.pos.programs) {
+            for (const reward of program.rewards) {
+                if (reward.reward_type !== "discount") {
+                    continue;
+                }
 
-        await updateRewardsMutex.exec(async () => {
-            await this._updateLoyaltyPrograms();
+                // Obtener productos válidos definidos en la regla
+                const validProductIds = new Set(
+                    reward.program_id.rules.flatMap(rule => rule.valid_product_ids || [])
+                );
 
-            const claimableRewards = this.getClaimableRewards(false, false, true);
+                if (!validProductIds.size) {
+                    continue; // No hay productos válidos definidos
+                }
 
-            for (const { coupon_id, reward } of claimableRewards) {
-                // Personalizamos aquí para aplicar múltiples veces si corresponde
-                if (
-                    reward.program_id.rewards.length === 1 &&
-                    !reward.program_id.is_nominative &&
-                    (reward.reward_type !== "product" || (reward.reward_type === "product" && !reward.multi_product))
-                ) {
-                    console.log("🎯 Se aplica recompensa:", reward.name);
-                    this._applyReward(reward, coupon_id);
+                // Contar cuántas unidades de productos válidos hay en el carrito
+                const matchingQty = orderlines
+                    .filter(line => validProductIds.has(line.product.id))
+                    .reduce((sum, line) => sum + line.quantity, 0);
+
+                // Verificamos si se cumple la cantidad mínima
+                const minQty = reward.program_id.rules[0].min_quantity || 1;
+                const applicableTimes = Math.floor(matchingQty / minQty);
+
+                if (applicableTimes > 0) {
+                    for (let i = 0; i < applicableTimes; i++) {
+                        rewards.push({
+                            reward: reward,
+                            coupon_id: null,
+                        });
+                    }
                 }
             }
+        }
 
-            this._updateRewardLines();
-            await this._updateLoyaltyPrograms();
-        });
+        return rewards;
     },
 });
