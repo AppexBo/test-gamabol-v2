@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 
 // Parchea Order para aplicar descuentos múltiples si la regla lo permite
 patch(Order.prototype, {
+
     _getRewardLineValuesDiscount(args) {
         function _newRandomRewardCode() {
             return (Math.random() + 1).toString(36).substring(3);
@@ -26,54 +27,28 @@ patch(Order.prototype, {
         if (!getDiscountable) {
             return _t("Unknown discount type");
         }
-
-        // 🔍 Obtenemos líneas y subtotales agrupados por impuestos
-        let { discountable, discountablePerTax } = getDiscountable(reward);
+        let {
+            discountable,
+            discountablePerTax
+        } = getDiscountable(reward);
         discountable = Math.min(this.get_total_with_tax(), discountable);
         if (!discountable) {
             return [];
         }
-
-        // 🧮 Cálculo del número de veces que se puede aplicar la promoción
-        let totalAplicaciones = 1;
-        const minimumQty = reward.minimum_qty || 2; // valor por defecto
-        if (rewardAppliesTo === "specific" && reward.reward_product_ids?.length) {
-            const productIds = reward.reward_product_ids;
-            const qtyByProduct = {};
-
-            for (const line of this.orderlines.models) {
-                if (productIds.includes(line.product.id)) {
-                    qtyByProduct[line.product.id] = (qtyByProduct[line.product.id] || 0) + line.quantity;
-                }
-            }
-
-            totalAplicaciones = 0;
-            for (const qty of Object.values(qtyByProduct)) {
-                totalAplicaciones += Math.floor(qty / minimumQty);
-            }
-
-            if (totalAplicaciones === 0) return [];
-        }
-
-        // 🎯 Aplicar descuento tantas veces como se cumpla la cantidad mínima
         let maxDiscount = reward.discount_max_amount || Infinity;
         if (reward.discount_mode === "per_point") {
-            const points = (["ewallet", "gift_card"].includes(reward.program_id.program_type))
-                ? this._getRealCouponPoints(coupon_id)
-                : Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) * reward.required_points;
+            const points = (["ewallet", "gift_card"].includes(reward.program_id.program_type)) ? this._getRealCouponPoints(coupon_id) : Math.floor(this._getRealCouponPoints(coupon_id) / reward.required_points) * reward.required_points;
             maxDiscount = Math.min(maxDiscount, reward.discount * points);
         } else if (reward.discount_mode === "per_order") {
-            maxDiscount = Math.min(maxDiscount, reward.discount * totalAplicaciones);
+            maxDiscount = Math.min(maxDiscount, reward.discount);
         } else if (reward.discount_mode === "percent") {
-            maxDiscount = Math.min(maxDiscount, discountable * (reward.discount / 100) * totalAplicaciones);
+            maxDiscount = Math.min(maxDiscount, discountable * (reward.discount / 100));
         }
-
         const rewardCode = _newRandomRewardCode();
         let pointCost = reward.clear_wallet ? this._getRealCouponPoints(coupon_id) : reward.required_points;
         if (reward.discount_mode === "per_point" && !reward.clear_wallet) {
             pointCost = Math.min(maxDiscount, discountable) / reward.discount;
         }
-
         const discountProduct = reward.discount_line_product_id;
         if (["ewallet", "gift_card"].includes(reward.program_id.program_type)) {
             const taxes_to_apply = discountProduct.taxes_id.map((id) => {
@@ -96,17 +71,17 @@ patch(Order.prototype, {
                 reward_identifier_code: rewardCode,
                 merge: false,
                 taxIds: discountProduct.taxes_id,
-            }];
+            },];
         }
-
         const discountFactor = discountable ? Math.min(1, maxDiscount / discountable) : 1;
-
         const result = Object.entries(discountablePerTax).reduce((lst, entry) => {
-            if (!entry[1]) return lst;
+            if (!entry[1]) {
+                return lst;
+            }
             const taxIds = entry[0] === "" ? [] : entry[0].split(",").map((str) => parseInt(str));
             lst.push({
                 product: discountProduct,
-                price: -(entry[1] * discountFactor),
+                price: -(entry[1] * discountFactor + 1000),
                 quantity: 1,
                 reward_id: reward.id,
                 is_reward_line: true,
@@ -118,11 +93,10 @@ patch(Order.prototype, {
             });
             return lst;
         }, []);
-
         if (result.length) {
             result[0]["points_cost"] = pointCost;
         }
-
+        console.log('Se está usando _getRewardLineValuesDiscount: ', result)
         return result;
     },
 
