@@ -67,7 +67,7 @@ patch(Order.prototype, {
         const rules = reward.program_id.rules || [];
 
         // Detectar si alguna regla tiene apply_multiple
-        const useMultiple = rules.some(rule => rule.apply_multiple);
+        const useMultiple = true;
 
         if (useMultiple) {
             console.log('Se aplicó useMultiple')
