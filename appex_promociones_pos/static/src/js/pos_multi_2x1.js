@@ -4,15 +4,32 @@ import { patch } from "@web/core/utils/patch";
 import { Order } from "@point_of_sale/app/store/models";
 
 patch(Order.prototype, {
-    _applyReward(reward, couponId, args) {
-        console.log("Se aplicó una recompensa:");
-        console.log("Tipo:", reward.reward_type);
-        console.log("Producto relacionado:", args.product);
-        console.log("Precio:", args.price);
-        console.log("Cantidad:", args.quantity);
-        console.log("Puntos usados:", args.cost);
+    async _updateRewards() {
+        if (this.pos.programs.length === 0) {
+            return;
+        }
 
-        // Llama a la función original
-        return super._applyReward(reward, couponId, args);
-    }
+        console.log("🔁 Ejecutando _updateRewards (custom)");
+
+        await this.pos.updateRewardsMutex.exec(async () => {
+            await this._updateLoyaltyPrograms();
+
+            const claimableRewards = this.getClaimableRewards(false, false, true);
+
+            for (const { coupon_id, reward } of claimableRewards) {
+                // Personalizamos aquí para aplicar múltiples veces si corresponde
+                if (
+                    reward.program_id.rewards.length === 1 &&
+                    !reward.program_id.is_nominative &&
+                    (reward.reward_type !== "product" || (reward.reward_type === "product" && !reward.multi_product))
+                ) {
+                    console.log("🎯 Se aplica recompensa:", reward.name);
+                    this._applyReward(reward, coupon_id);
+                }
+            }
+
+            this._updateRewardLines();
+            await this._updateLoyaltyPrograms();
+        });
+    },
 });
