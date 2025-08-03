@@ -11,7 +11,7 @@ patch(Order.prototype, {
 
         console.log("🔁 Ejecutando _updateRewards (custom)");
 
-        await this.pos.updateRewardsMutex.exec(async () => {
+        await updateRewardsMutex.exec(async () => {
             await this._updateLoyaltyPrograms();
 
             const claimableRewards = this.getClaimableRewards(false, false, true);
