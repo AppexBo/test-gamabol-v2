@@ -2,7 +2,7 @@
 
 import { patch } from "@web/core/utils/patch";
 import { Order } from "@point_of_sale/app/store/models";
-import { updateRewardsMutex } from "@web/core/utils/concurrency";
+import { updateRewardsMutex } from "@point_of_sale/app/store/mutex";
 
 patch(Order.prototype, {
     async _updateRewards() {
