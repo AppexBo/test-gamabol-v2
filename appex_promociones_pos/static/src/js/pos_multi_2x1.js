@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { patch } from "@web/core/utils/patch";
-import { LoyaltyLoader } from "@point_of_sale/app/models/loyalty_program/loyalty_program_loader";
+import { LoyaltyLoader } from "@point_of_sale/app/models/loyalty_program";
 import { Order } from "@point_of_sale/app/store/models/order";
 
 // 🧩 Patch al loader: para incluir apply_multiple
