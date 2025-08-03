@@ -56,10 +56,12 @@ patch(Order.prototype, {
                 // Aquí modificamos la lógica para aplicar múltiples veces
                 let unclaimedQty = 1;
                 if (reward.apply_multiple) {
+                    console.log('Se debe aplicar multiples descuentos', reward.apply_multiple);
                     unclaimedQty = Math.floor(points / reward.required_points);
                     if (unclaimedQty <= 0) {
                         continue;
                     }
+                    console.log('Cantidad de veces => ', unclaimedQty);
                 } else if (reward.reward_type === "product") {
                     if (!reward.multi_product) {
                         const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
