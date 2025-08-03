@@ -5,7 +5,7 @@ import { Order } from "@point_of_sale/app/store/models/order";
 
 // Interceptar descuentos por lealtad
 patch(Order.prototype, {
-    getPotentialDiscountRewards(couponProgram) {
+    async getPotentialDiscountRewards(couponProgram) {
         const program = this.pos.program_by_id[couponProgram.program_id];
         const points = this.getLoyaltyPoints(program);
 
@@ -24,7 +24,7 @@ patch(Order.prototype, {
                 : reward.discount;
 
             if (discountAmount > 0 && points >= reward.required_points) {
-                console.log("Hola mundo, se aplicó el descuento 🎉");
+                console.log("Hola mundo, se aplicó el descuento");
                 result.push({
                     coupon_id: couponProgram.coupon_id,
                     reward,
