@@ -52,8 +52,15 @@ patch(Order.prototype, {
                 if (reward.reward_type === "discount" && totalIsZero) {
                     continue;
                 }
-                let unclaimedQty;
-                if (reward.reward_type === "product") {
+
+                // Aquí modificamos la lógica para aplicar múltiples veces
+                let unclaimedQty = 1;
+                if (reward.apply_multiple) {
+                    unclaimedQty = Math.floor(points / reward.required_points);
+                    if (unclaimedQty <= 0) {
+                        continue;
+                    }
+                } else if (reward.reward_type === "product") {
                     if (!reward.multi_product) {
                         const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
                         if (!product) {
@@ -65,6 +72,7 @@ patch(Order.prototype, {
                         continue;
                     }
                 }
+
                 result.push({
                     coupon_id: couponProgram.coupon_id,
                     reward: reward,
@@ -73,7 +81,7 @@ patch(Order.prototype, {
             }
         }
 
-        console.log('Se aplicó el descuento según la promoción', result)
+        console.log('Se aplicó el descuento según la promoción', result);
 
         return result;
     },
