@@ -19,8 +19,9 @@ patch(Order.prototype, {
             const orderLines = this.get_orderlines();
 
             const priceGroups = {};
+            const rules = reward.program_id.rules || [];
 
-            for (const rule of reward.rules) {
+            for (const rule of rules) {
                 const validProductIds = rule.valid_product_ids;
                 console.log("Productos válidos para la recompensa:", validProductIds);
                 
