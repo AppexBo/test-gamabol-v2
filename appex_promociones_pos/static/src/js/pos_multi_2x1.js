@@ -20,10 +20,12 @@ patch(Order.prototype, {
 
             const priceGroups = {};
             const rules = reward.program_id.rules || [];
+            console.log("Las reglas son: ", rules);
+            
 
             for (const rule of rules) {
                 const validProductIds = rule.valid_product_ids;
-                console.log("Productos válidos para la recompensa:", validProductIds);
+                console.log("Productos válidos para la recompensa:", Array.from(validProductIds));
                 
                 for (const line of orderLines) {
                     if (!line.get_quantity() || !line.get_unit_price || line.reward_id) {
