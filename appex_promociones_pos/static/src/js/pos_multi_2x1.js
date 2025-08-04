@@ -15,35 +15,51 @@ patch(Order.prototype, {
         }
 
         function getDiscountableOnMultiple(reward) {
-            const MIN_QTY = 2; // mínima cantidad para aplicar promoción
             const validProductIds = reward.all_discount_product_ids;
             const orderLines = this.get_orderlines();
-            const linesToDiscount = [];
+
+            const priceGroups = {};
 
             for (const line of orderLines) {
-                if (!line.get_quantity() || !line.price || line.reward_id) {
+                if (!line.get_quantity() || !line.get_unit_price || line.reward_id) {
                     continue;
                 }
-                const product_id = line.comboParent?.product.id || line.get_product().id;
 
-                if (validProductIds.has(product_id)) {
-                    linesToDiscount.push(line);
+                if (
+                    validProductIds.has(line.get_product().id) ||
+                    validProductIds.has(line.reward_product_id)
+                ) {
+                    const qty = line.get_quantity();
+                    const unitPrice = line.get_unit_price();
+                    const tax_ids = line.get_taxes().map((t) => t.id).join(',');
+
+                    for (let i = 0; i < qty; i++) {
+                        if (!priceGroups[unitPrice]) {
+                            priceGroups[unitPrice] = [];
+                        }
+                        priceGroups[unitPrice].push({
+                            line: line,
+                            unit_price: unitPrice,
+                            tax_ids: tax_ids,
+                        });
+                    }
                 }
             }
 
             let totalDiscount = 0;
             const discountablePerTax = {};
 
-            for (const line of linesToDiscount) {
-                const qty = line.get_quantity();
-                const unitPrice = line.get_unit_price();
-                const discountSets = Math.floor(qty / MIN_QTY); // cuántos pares hay
+            for (const price in priceGroups) {
+                const units = priceGroups[price];
+                const numPairs = Math.floor(units.length / 2);
 
-                if (discountSets > 0) {
-                    const discountAmount = discountSets * unitPrice; // uno gratis por cada par
+                for (let i = 0; i < numPairs * 2; i += 2) {
+                    const unit = units[i];  // puede ser i o i+1, da igual
+
+                    const discountAmount = unit.unit_price;
                     totalDiscount += discountAmount;
 
-                    const taxKey = line.get_taxes().map((t) => t.id);
+                    const taxKey = unit.tax_ids;
                     if (!discountablePerTax[taxKey]) {
                         discountablePerTax[taxKey] = 0;
                     }
@@ -58,7 +74,6 @@ patch(Order.prototype, {
         };
 
         const reward = args["reward"];
-        console.log("Datos de reward son: ", reward )
         const coupon_id = args["coupon_id"];
 
 
