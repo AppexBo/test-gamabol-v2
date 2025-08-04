@@ -193,7 +193,7 @@ class LocationSumm(models.Model):
 			'Tax': None,
 			'Estado': None,
 			'Metodos_de_Pago': [],
-			
+			'Impuestos_Detallados': [],
 		}
 
 		prod_data = {}
@@ -220,9 +220,10 @@ class LocationSumm(models.Model):
 				'Estado': session_id.state,
 				'Total_en_Bruto': session_id.total_payments_amount,
 			})
+			tax_data = {}
 			for odr in orders:
 				tax_total +=  odr.amount_tax
-				for line in odr.payment_ids:
+				for line in odr.payment_ids:	#esto es para la parte de pagos
 					payment_metod_info = line.payment_method_id.name
 					if payment_metod_info in info_payment:
 						old_qty = info_payment[payment_metod_info]['qty']
@@ -241,10 +242,36 @@ class LocationSumm(models.Model):
 						'payment_date': line.payment_date.strftime("%m-%d %H:%M"), 
 						'account_move': odr.account_move.name
 					})
+				for line in odr.lines:
+					for tax in line.tax_ids:
+						if tax.amount_type == "group":
+							total_porcentaje = 0
+							for children_tax_id in tax.children_tax_ids:
+								if children_tax_id.amount > 0:
+									total_porcentaje += children_tax_id.amount
+						else:
+							total_porcentaje = tax.amount
+
+						tax_name = tax.name
+						tax_amount = (total_porcentaje / 100) * line.price_subtotal_incl
+						
+						if tax_name in tax_data:
+							old_amount = tax_data[tax_name]['valor_total']
+							tax_data[tax_name].update({
+								'valor_total' : old_amount + tax_amount,
+							})
+						else:
+							# Si no existe, lo creamos
+							tax_data.update({ tax_name : {
+								'name': tax_name,
+								'valor_total' : tax_amount,
+							}})
+					
 			final_data.update({
 				'Metodos_de_Pago': info_payment,
 				'Tax': tax_total,
 				'Descuento': descuentos,
+				'Impuestos_Detallados': tax_data,
 			})
 			return final_data
 		else:

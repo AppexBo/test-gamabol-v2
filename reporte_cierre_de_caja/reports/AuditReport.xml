@@ -94,10 +94,11 @@
                                     <strong>Total Descuentos: </strong> <t t-esc="'%.2f' % float(form.get('Descuento', 0))"/>
                                 </div>
                                 -->
+                                <!--
                                 <div>
                                     <strong>Total Impuestos: </strong> <t t-esc="'%.2f' % float(form.get('Tax', 0))"/>
                                 </div>
-                                
+                                -->
                                 <div>
                                     <strong>Total Ventas: </strong> <t t-esc="'%.2f' % float(form.get('Total_en_Bruto', 0))"/>
                                 </div>
@@ -180,6 +181,41 @@
                                 </table>
                             </t>
                         </t>
+
+                        <br/>
+
+                        <div class="pos-receipt-center-align">
+                            <strong>Impuestos</strong>
+                        </div>
+                        
+                        <table class='orderlines' style="width: 100%; font-size: 10px; text-align: left; margin: 0px auto; border-collapse: collapse;">
+                            <colgroup>
+                                <col width='20%' />
+                                <col width='20%' />
+                            </colgroup>
+                            <thead>
+                                <tr >
+                                    <th style="border: 1px solid black;">#Ref.</th>
+                                    <th style="border: 1px solid black;">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tbody>
+                                    <t t-foreach="form['Impuestos_Detallados'].items()" t-as="impuesto" t-key="impuesto[0]">
+                                        <tr>
+                                            <td style="border: 1px solid black;">
+                                                <t t-esc="impuesto[1]['name']"/>
+                                            </td>
+                                            <td style="border: 1px solid black;">
+                                                <t t-esc="'%.2f' % float(impuesto[1]['valor_total'])"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </tbody>
+                        </table>
+                    
+
                     </div>
                 </div>
             </t>    
