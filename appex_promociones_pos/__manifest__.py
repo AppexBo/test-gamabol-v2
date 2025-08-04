@@ -22,13 +22,12 @@
         'lorem ipsum.\n\n'
     ),
     'data': [
-        'views/pos_loyalty_rule_views.xml',
-        'views/pos_loyalty_reward_views.xml',
+        #'views/pos_loyalty_rule_views.xml',
+        #'views/pos_loyalty_reward_views.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [
             'appex_promociones_pos/static/src/js/pos_multi_2x1.js',
-            'appex_promociones_pos/static/src/js/pos_store.js',
         ],
     },
 
