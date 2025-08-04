@@ -15,54 +15,45 @@ patch(Order.prototype, {
         }
 
         function getDiscountableOnMultiple(reward) {
-            const applicableProducts = reward.all_discount_product_ids;
-            const remainingAmountPerLine = {};
-            const discountableLines = [];
+            const MIN_QTY = 2; // mínima cantidad para aplicar promoción
+            const validProductIds = reward.all_discount_product_ids;
+            const orderLines = this.get_orderlines();
+            const linesToDiscount = [];
 
-            // Recopilar todas las líneas aplicables
-            for (const line of this.get_orderlines()) {
-                if (!line.get_quantity() || !line.price) continue;
-
+            for (const line of orderLines) {
+                if (!line.get_quantity() || !line.price || line.reward_id) {
+                    continue;
+                }
                 const product_id = line.comboParent?.product.id || line.get_product().id;
 
-                if (applicableProducts.has(product_id)) {
-                    const unit_price = line.get_price_with_tax() / line.get_quantity();
-
-                    for (let i = 0; i < line.get_quantity(); i++) {
-                        discountableLines.push({
-                            line,
-                            unit_price,
-                            cid: line.cid,
-                        });
-                    }
-
-                    remainingAmountPerLine[line.cid] = line.get_price_with_tax();
+                if (validProductIds.has(product_id)) {
+                    linesToDiscount.push(line);
                 }
             }
 
-            // Ordenar por precio de menor a mayor
-            discountableLines.sort((a, b) => a.unit_price - b.unit_price);
-
-            // Agrupar de a 2 y regalar el más barato
-            let discountable = 0;
+            let totalDiscount = 0;
             const discountablePerTax = {};
 
-            for (let i = 0; i + 1 < discountableLines.length; i += 2) {
-                const [cheapest, _] = [discountableLines[i], discountableLines[i + 1]];
+            for (const line of linesToDiscount) {
+                const qty = line.get_quantity();
+                const unitPrice = line.get_unit_price();
+                const discountSets = Math.floor(qty / MIN_QTY); // cuántos pares hay
 
-                discountable += cheapest.unit_price;
+                if (discountSets > 0) {
+                    const discountAmount = discountSets * unitPrice; // uno gratis por cada par
+                    totalDiscount += discountAmount;
 
-                const taxKey = cheapest.line.get_taxes().map(t => t.id);
-                if (!discountablePerTax[taxKey]) {
-                    discountablePerTax[taxKey] = 0;
+                    const taxKey = line.get_taxes().map((t) => t.id);
+                    if (!discountablePerTax[taxKey]) {
+                        discountablePerTax[taxKey] = 0;
+                    }
+                    discountablePerTax[taxKey] += discountAmount;
                 }
-
-                discountablePerTax[taxKey] += cheapest.line.get_base_price() * (cheapest.unit_price / cheapest.line.get_price_with_tax());
             }
 
             return {
-                discountable,
-                discountablePerTax
+                discountable: totalDiscount,
+                discountablePerTax: discountablePerTax,
             };
         };
 
