@@ -71,7 +71,7 @@ patch(Order.prototype, {
 
         if (useMultiple) {
             console.log('Se aplicó useMultiple')
-            getDiscountable = getDiscountableOnMultiple.bind(this);
+            getDiscountable = _getDiscountableOnSpecific.bind(this);
         } else if (rewardAppliesTo === "order") {
             getDiscountable = this._getDiscountableOnOrder.bind(this);
         } else if (rewardAppliesTo === "cheapest") {
@@ -136,8 +136,8 @@ patch(Order.prototype, {
             const taxIds = entry[0] === "" ? [] : entry[0].split(",").map((str) => parseInt(str));
             lst.push({
                 product: discountProduct,
-                price: -(entry[1] * discountFactor + 1000),
-                quantity: 1,
+                price: -(entry[1] * discountFactor),
+                quantity: 1 * 2,
                 reward_id: reward.id,
                 is_reward_line: true,
                 coupon_id: coupon_id,
