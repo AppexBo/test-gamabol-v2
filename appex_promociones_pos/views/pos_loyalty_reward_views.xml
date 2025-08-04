@@ -7,7 +7,7 @@
     <field name="inherit_id" ref="loyalty.loyalty_reward_view_form"/>
     <field name="arch" type="xml">
       <xpath expr="//field[@name='discount_max_amount']" position="after">
-        <field name="apply_multiple"/>
+        <field name="apply_multiple" invisible="reward_type != 'discount'"/>
       </xpath>
     </field>
   </record>
