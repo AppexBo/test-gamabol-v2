@@ -15,33 +15,36 @@ patch(Order.prototype, {
         }
 
         function getDiscountableOnMultiple(reward) {
-            const validProductIds = reward.all_discount_product_ids;
+            //const validProductIds = reward.all_discount_product_ids;
             const orderLines = this.get_orderlines();
 
             const priceGroups = {};
 
-            console.log("Productos válidos para la recompensa:", validProductIds);
-
-            for (const line of orderLines) {
-                if (!line.get_quantity() || !line.get_unit_price || line.reward_id) {
-                    continue;
-                }
-
-                if (validProductIds.has(line.get_product().id)) {
-                    console.log('Producto en línea:', line.get_product().id, 'Permitido:', validProductIds.has(line.get_product().id));
-                    const qty = line.get_quantity();
-                    const unitPrice = line.get_unit_price();
-                    const tax_ids = line.get_taxes().map((t) => t.id).join(',');
-
-                    for (let i = 0; i < qty; i++) {
-                        if (!priceGroups[unitPrice]) {
-                            priceGroups[unitPrice] = [];
+            for (const rule of reward.rules) {
+                const validProductIds = rule.valid_product_ids;
+                console.log("Productos válidos para la recompensa:", validProductIds);
+                
+                for (const line of orderLines) {
+                    if (!line.get_quantity() || !line.get_unit_price || line.reward_id) {
+                        continue;
+                    }
+    
+                    if (validProductIds.has(line.get_product().id)) {
+                        console.log('Producto en línea:', line.get_product().id, 'Permitido:', validProductIds.has(line.get_product().id));
+                        const qty = line.get_quantity();
+                        const unitPrice = line.get_unit_price();
+                        const tax_ids = line.get_taxes().map((t) => t.id).join(',');
+    
+                        for (let i = 0; i < qty; i++) {
+                            if (!priceGroups[unitPrice]) {
+                                priceGroups[unitPrice] = [];
+                            }
+                            priceGroups[unitPrice].push({
+                                line: line,
+                                unit_price: unitPrice,
+                                tax_ids: tax_ids,
+                            });
                         }
-                        priceGroups[unitPrice].push({
-                            line: line,
-                            unit_price: unitPrice,
-                            tax_ids: tax_ids,
-                        });
                     }
                 }
             }
@@ -80,10 +83,9 @@ patch(Order.prototype, {
 
         const rewardAppliesTo = reward.discount_applicability;
         let getDiscountable;
-        const rules = reward.program_id.rules || [];
 
         if (rewardAppliesTo === 'apply_multiple') {
-            console.log('Se aplicó useMultiple')
+            console.log('Se aplicó useMultiple: getDiscountableOnMultiple')
             getDiscountable = getDiscountableOnMultiple.bind(this);
         } else if (rewardAppliesTo === "order") {
             getDiscountable = this._getDiscountableOnOrder.bind(this);
