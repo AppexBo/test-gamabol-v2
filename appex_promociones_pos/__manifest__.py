@@ -23,6 +23,7 @@
     ),
     'data': [
         'views/pos_loyalty_rule_views.xml',
+        'views/pos_loyalty_reward_views.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [

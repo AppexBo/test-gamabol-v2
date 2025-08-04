@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_loyalty_reward_form_inherit_apply_multiple" model="ir.ui.view">
+    <field name="name">loyalty.reward.view.form.inherit.apply_multiple</field>
+    <field name="model">loyalty.reward</field>
+    <field name="priority" eval="17" />
+    <field name="inherit_id" ref="loyalty.loyalty_reward_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//group[@string='Discount' and not(@invisible)]" position="after">
+        <group string="Aplicación">
+          <field name="apply_multiple"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+</odoo>
