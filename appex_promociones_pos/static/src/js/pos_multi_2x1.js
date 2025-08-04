@@ -58,6 +58,7 @@ patch(Order.prototype, {
         };
 
         const reward = args["reward"];
+        console.log("Datos de reward son: ", reward )
         const coupon_id = args["coupon_id"];
 
 

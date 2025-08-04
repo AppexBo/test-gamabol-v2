@@ -6,10 +6,8 @@
     <field name="priority" eval="17" />
     <field name="inherit_id" ref="loyalty.loyalty_reward_view_form"/>
     <field name="arch" type="xml">
-      <xpath expr="//field[@name='discount_applicability']" position="after">
-        <group string="Aplicación">
-          <field name="apply_multiple"/>
-        </group>
+      <xpath expr="//field[@name='discount_max_amount']" position="after">
+        <field name="apply_multiple"/>
       </xpath>
     </field>
   </record>
