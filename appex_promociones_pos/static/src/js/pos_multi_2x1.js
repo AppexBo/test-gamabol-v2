@@ -16,62 +16,53 @@ patch(Order.prototype, {
 
         function getDiscountableOnMultiple(reward) {
             const applicableProducts = reward.all_discount_product_ids;
-            const orderLines = this.get_orderlines();
-            const rewardLines = [];
-            const discountablePerTax = {};
-            let discountable = 0;
+            const remainingAmountPerLine = {};
+            const discountableLines = [];
 
-            // Acumulador por producto aplicable
-            const productQuantities = {};
-            const productLines = {};
+            // Recopilar todas las líneas aplicables
+            for (const line of this.get_orderlines()) {
+                if (!line.get_quantity() || !line.price) continue;
 
-            for (const line of orderLines) {
-                const product_id = line.get_product().id;
-                if (!applicableProducts.has(product_id)) continue;
+                const product_id = line.comboParent?.product.id || line.get_product().id;
 
-                const qty = line.get_quantity();
-                if (!qty || !line.price) continue;
+                if (applicableProducts.has(product_id)) {
+                    const unit_price = line.get_price_with_tax() / line.get_quantity();
 
-                if (!productQuantities[product_id]) {
-                    productQuantities[product_id] = 0;
-                    productLines[product_id] = [];
+                    for (let i = 0; i < line.get_quantity(); i++) {
+                        discountableLines.push({
+                            line,
+                            unit_price,
+                            cid: line.cid,
+                        });
+                    }
+
+                    remainingAmountPerLine[line.cid] = line.get_price_with_tax();
                 }
-
-                productQuantities[product_id] += qty;
-                productLines[product_id].push(line);
             }
 
-            // Procesar productos aplicables al 2x1
-            for (const product_id in productQuantities) {
-                const qty = productQuantities[product_id];
-                const freeUnits = Math.floor(qty / 2); // cada 2 productos, 1 gratis
-                if (freeUnits <= 0) continue;
+            // Ordenar por precio de menor a mayor
+            discountableLines.sort((a, b) => a.unit_price - b.unit_price);
 
-                const lines = productLines[product_id];
-                let unitsLeftToDiscount = freeUnits;
+            // Agrupar de a 2 y regalar el más barato
+            let discountable = 0;
+            const discountablePerTax = {};
 
-                for (const line of lines) {
-                    const lineQty = line.get_quantity();
-                    const discountUnits = Math.min(unitsLeftToDiscount, lineQty);
-                    const unitPrice = line.get_unit_price();
-                    const lineDiscount = unitPrice * discountUnits;
+            for (let i = 0; i + 1 < discountableLines.length; i += 2) {
+                const [cheapest, _] = [discountableLines[i], discountableLines[i + 1]];
 
-                    discountable += lineDiscount;
+                discountable += cheapest.unit_price;
 
-                    const taxKey = line.get_taxes().map((t) => t.id).join(",");
-                    if (!discountablePerTax[taxKey]) {
-                        discountablePerTax[taxKey] = 0;
-                    }
-                    discountablePerTax[taxKey] += lineDiscount;
-
-                    unitsLeftToDiscount -= discountUnits;
-                    if (unitsLeftToDiscount <= 0) break;
+                const taxKey = cheapest.line.get_taxes().map(t => t.id);
+                if (!discountablePerTax[taxKey]) {
+                    discountablePerTax[taxKey] = 0;
                 }
+
+                discountablePerTax[taxKey] += cheapest.line.get_base_price() * (cheapest.unit_price / cheapest.line.get_price_with_tax());
             }
 
             return {
                 discountable,
-                discountablePerTax,
+                discountablePerTax
             };
         };
 
