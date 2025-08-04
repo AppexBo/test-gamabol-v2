@@ -20,15 +20,15 @@ patch(Order.prototype, {
 
             const priceGroups = {};
 
+            console.log("Productos válidos para la recompensa:", Array.from(validProductIds));
+
             for (const line of orderLines) {
                 if (!line.get_quantity() || !line.get_unit_price || line.reward_id) {
                     continue;
                 }
 
                 if (
-                    validProductIds.has(line.get_product().id) ||
-                    validProductIds.has(line.reward_product_id)
-                ) {
+                    validProductIds.has(line.get_product().id)) {
                     const qty = line.get_quantity();
                     const unitPrice = line.get_unit_price();
                     const tax_ids = line.get_taxes().map((t) => t.id).join(',');
