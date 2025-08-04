@@ -15,45 +15,63 @@ patch(Order.prototype, {
         }
 
         function getDiscountableOnMultiple(reward) {
-            const rules = reward.program_id.rules || [];
-            const linesToDiscount = [];
-            const remainingAmountPerLine = {};
+            const applicableProducts = reward.all_discount_product_ids;
             const orderLines = this.get_orderlines();
+            const rewardLines = [];
+            const discountablePerTax = {};
+            let discountable = 0;
+
+            // Acumulador por producto aplicable
+            const productQuantities = {};
+            const productLines = {};
 
             for (const line of orderLines) {
-                if (!line.get_quantity() || !line.price) continue;
+                const product_id = line.get_product().id;
+                if (!applicableProducts.has(product_id)) continue;
 
-                const product_id = line.comboParent?.product.id || line.get_product().id;
+                const qty = line.get_quantity();
+                if (!qty || !line.price) continue;
 
-                // Buscar si alguna regla aplica a este producto
-                const rule = rules.find(rule => {
-                    return (
-                        rule.product_ids?.includes(product_id) ||
-                        rule.category_ids?.some(catId => line.get_product().pos_categ_id?.[0] === catId)
-                    );
-                });
-
-                if (rule) {
-                    linesToDiscount.push(line);
-                    remainingAmountPerLine[line.cid] = line.get_price_with_tax();
+                if (!productQuantities[product_id]) {
+                    productQuantities[product_id] = 0;
+                    productLines[product_id] = [];
                 }
+
+                productQuantities[product_id] += qty;
+                productLines[product_id].push(line);
             }
 
-            let discountable = 0;
-            const discountablePerTax = {};
+            // Procesar productos aplicables al 2x1
+            for (const product_id in productQuantities) {
+                const qty = productQuantities[product_id];
+                const freeUnits = Math.floor(qty / 2); // cada 2 productos, 1 gratis
+                if (freeUnits <= 0) continue;
 
-            for (const line of linesToDiscount) {
-                discountable += remainingAmountPerLine[line.cid];
-                const taxKey = line.get_taxes().map((t) => t.id);
-                if (!discountablePerTax[taxKey]) {
-                    discountablePerTax[taxKey] = 0;
+                const lines = productLines[product_id];
+                let unitsLeftToDiscount = freeUnits;
+
+                for (const line of lines) {
+                    const lineQty = line.get_quantity();
+                    const discountUnits = Math.min(unitsLeftToDiscount, lineQty);
+                    const unitPrice = line.get_unit_price();
+                    const lineDiscount = unitPrice * discountUnits;
+
+                    discountable += lineDiscount;
+
+                    const taxKey = line.get_taxes().map((t) => t.id).join(",");
+                    if (!discountablePerTax[taxKey]) {
+                        discountablePerTax[taxKey] = 0;
+                    }
+                    discountablePerTax[taxKey] += lineDiscount;
+
+                    unitsLeftToDiscount -= discountUnits;
+                    if (unitsLeftToDiscount <= 0) break;
                 }
-                discountablePerTax[taxKey] += line.get_base_price() * (remainingAmountPerLine[line.cid] / line.get_price_with_tax());
             }
 
             return {
                 discountable,
-                discountablePerTax
+                discountablePerTax,
             };
         };
 
@@ -71,7 +89,7 @@ patch(Order.prototype, {
 
         if (useMultiple) {
             console.log('Se aplicó useMultiple')
-            getDiscountable = this._getDiscountableOnSpecific.bind(this);
+            getDiscountable = getDiscountableOnMultiple.bind(this);
         } else if (rewardAppliesTo === "order") {
             getDiscountable = this._getDiscountableOnOrder.bind(this);
         } else if (rewardAppliesTo === "cheapest") {
@@ -137,7 +155,7 @@ patch(Order.prototype, {
             lst.push({
                 product: discountProduct,
                 price: -(entry[1] * discountFactor),
-                quantity: 1 * 2,
+                quantity: 1,
                 reward_id: reward.id,
                 is_reward_line: true,
                 coupon_id: coupon_id,
