@@ -100,7 +100,7 @@ export class PaymentMollie extends PaymentInterface {
         }
 
         //var URL_SET_SALE = "https://" + ip + ":" + puerto + "/sale?monto=";
-        var URL_SET_SALE = "https://" + ip + "/sale?monto=";
+        var URL_SET_SALE = ip + "/sale?monto=";
         var montoTran = monto;
         var cod_moneda = moneda;
         var urlSale = URL_SET_SALE + montoTran + "&cod_moneda=" + cod_moneda;
