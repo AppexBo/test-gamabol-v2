@@ -71,7 +71,7 @@ patch(Order.prototype, {
 
         if (useMultiple) {
             console.log('Se aplicó useMultiple')
-            getDiscountable = _getDiscountableOnSpecific.bind(this);
+            getDiscountable = this._getDiscountableOnSpecific.bind(this);
         } else if (rewardAppliesTo === "order") {
             getDiscountable = this._getDiscountableOnOrder.bind(this);
         } else if (rewardAppliesTo === "cheapest") {
