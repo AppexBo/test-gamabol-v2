@@ -15,40 +15,45 @@ patch(Order.prototype, {
         }
 
         function getDiscountableOnMultiple(reward) {
-            //const validProductIds = reward.all_discount_product_ids;
             const orderLines = this.get_orderlines();
 
             const priceGroups = {};
             const rules = reward.program_id.rules || [];
-            console.log("Las reglas son: ", rules);
-            
-
+            const allValidProductIds = new Set();
             for (const rule of rules) {
-                const validProductIds = rule.valid_product_ids;
-                console.log("Productos válidos para la recompensa:", Array.from(validProductIds));
-                
-                for (const line of orderLines) {
-                    if (!line.get_quantity() || !line.get_unit_price || line.reward_id) {
-                        continue;
+                if (rule.valid_product_ids && rule.valid_product_ids instanceof Set) {
+                    for (const id of rule.valid_product_ids) {
+                        allValidProductIds.add(id);
                     }
-    
-                    if (validProductIds.has(line.get_product().id)) {
-                        console.log('Producto en línea:', line.get_product().id, 'Permitido:', validProductIds.has(line.get_product().id));
-                        const qty = line.get_quantity();
-                        const unitPrice = line.get_unit_price();
-                        const tax_ids = line.get_taxes().map((t) => t.id).join(',');
-    
-                        for (let i = 0; i < qty; i++) {
-                            if (!priceGroups[unitPrice]) {
-                                priceGroups[unitPrice] = [];
-                            }
-                            priceGroups[unitPrice].push({
-                                line: line,
-                                unit_price: unitPrice,
-                                tax_ids: tax_ids,
-                            });
+                }
+            }
+            console.log("Productos válidos para la recompensa:", Array.from(allValidProductIds));
+
+            for (const line of orderLines) {
+                const productId = line.get_product().id;
+
+                if (!line.get_quantity() || !line.get_unit_price || line.reward_id) {
+                    continue;
+                }
+
+                if (allValidProductIds.has(productId)) {
+                    console.log('Producto en línea:', productId, 'Permitido:', true);
+                    const qty = line.get_quantity();
+                    const unitPrice = line.get_unit_price();
+                    const tax_ids = line.get_taxes().map((t) => t.id).join(',');
+
+                    for (let i = 0; i < qty; i++) {
+                        if (!priceGroups[unitPrice]) {
+                            priceGroups[unitPrice] = [];
                         }
+                        priceGroups[unitPrice].push({
+                            line: line,
+                            unit_price: unitPrice,
+                            tax_ids: tax_ids,
+                        });
                     }
+                } else {
+                    console.log('Producto en línea:', productId, 'Permitido:', false);
                 }
             }
 
