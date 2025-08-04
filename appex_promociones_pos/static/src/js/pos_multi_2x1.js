@@ -66,8 +66,10 @@ patch(Order.prototype, {
         let getDiscountable;
         const rules = reward.program_id.rules || [];
 
+        console.log("las reglas son: ", rules )
         // Detectar si alguna regla tiene apply_multiple
-        const useMultiple = true;
+        const useMultiple = reward.apply_multiple;
+        console.log("La recompensa está con useMultiple: ", useMultiple)
 
         if (useMultiple) {
             console.log('Se aplicó useMultiple')
