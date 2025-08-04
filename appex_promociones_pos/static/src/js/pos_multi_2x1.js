@@ -26,9 +26,8 @@ patch(Order.prototype, {
                 if (!line.get_quantity() || !line.get_unit_price || line.reward_id) {
                     continue;
                 }
-
-                if (
-                    validProductIds.has(line.get_product().id)) {
+                
+                if (validProductIds.has(line.reward_product_id) && line.reward_product_id) {
                     const qty = line.get_quantity();
                     const unitPrice = line.get_unit_price();
                     const tax_ids = line.get_taxes().map((t) => t.id).join(',');
