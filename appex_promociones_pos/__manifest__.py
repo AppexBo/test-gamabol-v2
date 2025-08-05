@@ -15,7 +15,9 @@
         'Cambio en Promoción 2x1 múltiple para POS.'
     ),
     'description': (    
-        'Intercepta el código de -Descuento y Lealtad- para poder asignar el descuento según el listado de reglas.'
+        'Intercepta el código de -Descuento y Lealtad- para poder asignar el descuento según el listado de reglas. '
+        'Está en la vista de Recompensa, el nuevo campo llamado (apply_multiple:Promoción 2x1); '
+        'Y actualizar -Descripción en la orden- de recompensa con texto personalizado '
     ),
     'data': [
         #'views/pos_loyalty_rule_views.xml',
