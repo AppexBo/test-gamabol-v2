@@ -15,11 +15,7 @@
         'Cambio en Promoción 2x1 múltiple para POS.'
     ),
     'description': (    
-        'Cambios visuales y correcciones minimas.\n\n'
-        'sobre una lista de productos específica '
-        'en el Punto de Venta (POS),'
-        'basadas en reglas configurables desde el sistema de lealtad (loyalty.rule)..'
-        'lorem ipsum.\n\n'
+        'Intercepta el código de -Descuento y Lealtad- para poder asignar el descuento según el listado de reglas.'
     ),
     'data': [
         #'views/pos_loyalty_rule_views.xml',

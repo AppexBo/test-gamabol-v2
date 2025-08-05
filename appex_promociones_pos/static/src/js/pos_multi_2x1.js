@@ -4,8 +4,6 @@ import { patch } from "@web/core/utils/patch";
 import { Order } from "@point_of_sale/app/store/models";
 import { _t } from "@web/core/l10n/translation";
 
-
-// Parchea Order para aplicar descuentos múltiples si la regla lo permite
 patch(Order.prototype, {
 
 
@@ -27,7 +25,7 @@ patch(Order.prototype, {
                     }
                 }
             }
-            console.log("Productos válidos para la recompensa:", Array.from(allValidProductIds));
+            //console.log("Productos válidos para la recompensa:", Array.from(allValidProductIds));
 
             const units = [];
             for (const line of orderLines) {
@@ -38,7 +36,7 @@ patch(Order.prototype, {
                 }
 
                 if (allValidProductIds.has(productId)) {
-                    console.log('Producto en línea:', productId, 'Permitido:', true);
+                    //console.log('Producto en línea:', productId, 'Permitido:', true);
                     const qty = line.get_quantity();
                     const unitPrice = line.get_unit_price();
                     const tax_ids = line.get_taxes().map((t) => t.id).join(',');
@@ -51,7 +49,7 @@ patch(Order.prototype, {
                         });
                     }
                 } else {
-                    console.log('Producto en línea:', productId, 'Permitido:', false);
+                    //console.log('Producto en línea:', productId, 'Permitido:', false);
                 }
             }
 
@@ -89,7 +87,7 @@ patch(Order.prototype, {
         let getDiscountable;
 
         if (rewardAppliesTo === 'apply_multiple') {
-            console.log('Se aplicó useMultiple: getDiscountableOnMultiple')
+            //console.log('Se aplicó useMultiple: getDiscountableOnMultiple')
             getDiscountable = getDiscountableOnMultiple.bind(this);
         } else if (rewardAppliesTo === "order") {
             getDiscountable = this._getDiscountableOnOrder.bind(this);
@@ -170,7 +168,7 @@ patch(Order.prototype, {
         if (result.length) {
             result[0]["points_cost"] = pointCost;
         }
-        console.log('Se está usando _getRewardLineValuesDiscount: ', result)
+        //console.log('Se está usando _getRewardLineValuesDiscount: ', result)
         return result;
     },
 

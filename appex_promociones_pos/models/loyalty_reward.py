@@ -7,5 +7,5 @@ class LoyaltyReward(models.Model):
         ('order', 'Order'),
         ('cheapest', 'Cheapest Product'),
         ('specific', 'Specific Products'),
-        ('apply_multiple', 'Promoción 2x1 múltiple')
+        ('apply_multiple', 'Promoción 2x1')
     ], default='order')
