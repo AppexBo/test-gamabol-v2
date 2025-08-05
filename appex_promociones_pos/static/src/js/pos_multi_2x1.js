@@ -29,6 +29,7 @@ patch(Order.prototype, {
             }
             console.log("Productos válidos para la recompensa:", Array.from(allValidProductIds));
 
+            const units = [];
             for (const line of orderLines) {
                 const productId = line.get_product().id;
 
@@ -43,10 +44,7 @@ patch(Order.prototype, {
                     const tax_ids = line.get_taxes().map((t) => t.id).join(',');
 
                     for (let i = 0; i < qty; i++) {
-                        if (!priceGroups[unitPrice]) {
-                            priceGroups[unitPrice] = [];
-                        }
-                        priceGroups[unitPrice].push({
+                        units.push({
                             line: line,
                             unit_price: unitPrice,
                             tax_ids: tax_ids,
@@ -60,22 +58,20 @@ patch(Order.prototype, {
             let totalDiscount = 0;
             const discountablePerTax = {};
 
-            for (const price in priceGroups) {
-                const units = priceGroups[price];
-                const numPairs = Math.floor(units.length / 2);
+            units.sort((a, b) => a.unit_price - b.unit_price);
+            const numPairs = Math.floor(units.length / 2);
 
-                for (let i = 0; i < numPairs * 2; i += 2) {
-                    const unit = units[i];  // puede ser i o i+1, da igual
+            for (let i = 0; i < numPairs * 2; i += 2) {
+                const cheaperUnit = units[i];
 
-                    const discountAmount = unit.unit_price;
-                    totalDiscount += discountAmount;
+                const discountAmount = cheaperUnit.unit_price;
+                totalDiscount += discountAmount;
 
-                    const taxKey = unit.tax_ids;
-                    if (!discountablePerTax[taxKey]) {
-                        discountablePerTax[taxKey] = 0;
-                    }
-                    discountablePerTax[taxKey] += discountAmount;
+                const taxKey = cheaperUnit.tax_ids;
+                if (!discountablePerTax[taxKey]) {
+                    discountablePerTax[taxKey] = 0;
                 }
+                discountablePerTax[taxKey] += discountAmount;
             }
 
             return {
