@@ -241,7 +241,7 @@
                         </div>
                         <table style="width: 100%; border: 1px solid white; margin-top: 20px;">
                             <tr style="border: none !important;">
-                                <td style="width: 30%; text-align: left; border: none !important;">
+                                <td style="width: 20%; text-align: left; border: none !important;">
                                     <b>NOMBRE:</b>
                                 </td>
                                 <td style="border-bottom: 1px solid black !important;">
@@ -249,7 +249,7 @@
                                 </td>
                             </tr>
                             <tr style="border: none !important;">
-                                <td style="width: 30%; text-align: left; border: none !important; padding-top: 20px; ">
+                                <td style="width: 20%; text-align: left; border: none !important; padding-top: 20px; ">
                                     <b>FIRMA:</b>
                                 </td>
                                 <td style="border-bottom: 1px solid black !important; padding-top: 20px;">
@@ -257,7 +257,7 @@
                                 </td>
                             </tr>
                             <tr style="border: none !important;">
-                                <td style="width: 30%; text-align: left; border: none !important; padding-top: 10px;">
+                                <td style="width: 20%; text-align: left; border: none !important; padding-top: 10px;">
                                     <b>CI:</b>
                                 </td>
                                 <td style="border-bottom: 1px solid black !important; padding-top: 10px;">
