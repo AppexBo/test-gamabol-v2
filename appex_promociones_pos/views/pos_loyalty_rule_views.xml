@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_loyalty_rule_form_inherit_appex" model="ir.ui.view">
+    <field name="name">loyalty.rule.view.form.inherit.appex</field>
+    <field name="model">loyalty.rule</field>
+    <field name="priority" eval="17" />
+    <field name="inherit_id" ref="loyalty.loyalty_rule_view_form" />
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='minimum_qty']" position="after">
+        <field name="apply_multiple" />
+      </xpath>
+    </field>
+  </record>
+</odoo>
