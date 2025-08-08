@@ -239,21 +239,21 @@
                         <div style="text-align: center; font-weight: bold; font-size: 13px;">
                             ------------------------------------------------------------------------
                         </div>
-                        <table style="width: 100%; border: 1px solid white;">
+                        <table style="width: 100%; border: 1px solid white; margin-top: 20px;">
                             <tr style="border: none !important;">
                                 <td style="text-align: left; border: none !important;">
                                     <b>NOMBRE:</b>
                                 </td>
                                 <td style="padding-left: 5px; border: none !important; text-align: start !important;">
-                                    ------------------------------------------------------------
+                                    -----------------------------------------------------------
                                 </td>
                             </tr>
-                            <tr style="border: none !important; padding-top: 50px;">
+                            <tr style="border: none !important; margin-top: 50px;">
                                 <td style="text-align: left; border: none !important;">
                                     <b>FIRMA:</b>
                                 </td>
                                 <td style="padding-left: 5px; border-botton: 1px solid black !important; text-align: start !important;">
-                                    ------------------------------------------------------------
+                                    -----------------------------------------------------------
                                 </td>
                             </tr>
                             <tr style="border: none !important;">
@@ -261,7 +261,7 @@
                                     <b>CI:</b>
                                 </td>
                                 <td style="padding-left: 5px; border: none !important; text-align: start !important;">
-                                    ------------------------------------------------------------
+                                    -----------------------------------------------------------
                                 </td>
                             </tr>
                         </table>
