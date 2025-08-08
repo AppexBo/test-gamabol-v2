@@ -248,9 +248,9 @@
                                     ------------------------------------------------------------------------
                                 </td>
                             </tr>
-                            <tr style="border: none !important;">
+                            <tr style="border: none !important; padding-top: 20px;">
                                 <td style="text-align: left; border: none !important;">
-                                    <b>CI:</b>
+                                    <b>FIRMA:</b>
                                 </td>
                                 <td style="padding-left: 5px; border: none !important; text-align: start !important;">
                                     ------------------------------------------------------------------------
@@ -258,7 +258,7 @@
                             </tr>
                             <tr style="border: none !important;">
                                 <td style="text-align: left; border: none !important;">
-                                    <b>FIRMA:</b>
+                                    <b>CI:</b>
                                 </td>
                                 <td style="padding-left: 5px; border: none !important; text-align: start !important;">
                                     ------------------------------------------------------------------------
