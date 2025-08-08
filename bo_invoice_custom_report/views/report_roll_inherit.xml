@@ -249,10 +249,10 @@
                                 </td>
                             </tr>
                             <tr style="border: none !important;">
-                                <td style="width: 20%; text-align: right; border: none !important; padding-top: 20px; ">
+                                <td style="width: 20%; text-align: right; border: none !important; padding-top: 25px; ">
                                     <b>FIRMA:</b>
                                 </td>
-                                <td style="border-bottom: 1px solid black !important; padding-top: 20px;">
+                                <td style="border-bottom: 1px solid black !important; padding-top: 25px;">
                                     
                                 </td>
                             </tr>
