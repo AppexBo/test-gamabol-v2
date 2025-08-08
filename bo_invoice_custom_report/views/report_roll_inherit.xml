@@ -244,7 +244,7 @@
                                 <td style="width: 20%; text-align: right; border: none !important;">
                                     <b>NOMBRE:</b>
                                 </td>
-                                <td style="border-bottom: 0px solid black !important;">
+                                <td style="border-bottom: 0.5px solid black !important;">
                                     
                                 </td>
                             </tr>
@@ -252,7 +252,7 @@
                                 <td style="width: 20%; text-align: right; border: none !important; padding-top: 20px; ">
                                     <b>FIRMA:</b>
                                 </td>
-                                <td style="border-bottom: 0px solid black !important; padding-top: 20px;">
+                                <td style="border-bottom: 0.5px solid black !important; padding-top: 20px;">
                                     
                                 </td>
                             </tr>
@@ -260,7 +260,7 @@
                                 <td style="width: 20%; text-align: right; border: none !important; padding-top: 10px;">
                                     <b>C.I.:</b>
                                 </td>
-                                <td style="border-bottom: 0px solid black !important; padding-top: 10px;">
+                                <td style="border-bottom: 0.5px solid black !important; padding-top: 10px;">
                                     
                                 </td>
                             </tr>
