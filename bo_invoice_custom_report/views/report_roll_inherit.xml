@@ -52,7 +52,7 @@
                             </tr>
                         </table>
                         <div style="text-align: center; font-weight: bold; font-size: 13px;">
-                            -------------
+                            ------------------------------------------------------------------------
                         </div>
                         <table style="width: 100%; text-align: center; border: 1px solid white;">
                             <tr style="border: none !important;">
@@ -85,7 +85,7 @@
                             <span t-esc="o.cuf"/>
                         </div>
                         <div style="text-align: center; font-weight: bold; font-size: 13px;">
-                            -------------
+                            ------------------------------------------------------------------------
                         </div>
                         <table style="width: 100%; text-align: center; border: 1px solid white;">
                             <tr style="border: none !important;">
@@ -125,7 +125,7 @@
                             </tr>
                         </table>
                         <div style="text-align: center; font-weight: bold; font-size: 13px;">
-                            -------------
+                            ------------------------------------------------------------------------
                         </div>
                         <table style="width: 100%; text-align: start; border: 1px solid white;">
                             <tr style="text-align: center; border: none !important;">
@@ -162,7 +162,7 @@
                             </tbody>
                         </table>
                         <div style="text-align: center; font-weight: bold; font-size: 13px;">
-                            -------------
+                            ------------------------------------------------------------------------
                         </div>
                         <table style="width: 100%; text-align: center; border: 1px solid white;">
                             <tr style="border: none !important;">
@@ -222,7 +222,7 @@
                                 <span t-esc="o.getBolivianLiteral()"/> Bolivianos</span>
                         </div>
                         <div style="text-align: center; font-weight: bold; font-size: 13px;">
-                            -------------
+                            ------------------------------------------------------------------------
                         </div>
                         <div style="text-align: center; font-size: 11px;">
                             ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS, EL USO ILÍCITO SERÁ SANCIONADO PENALMENTE DE ACUERDO A LEY
@@ -237,31 +237,31 @@
                             <img t-att-src="'data:image/png;base64,' + str(o.generate_qr())" width="120" height="120"/>
                         </div>
                         <div style="text-align: center; font-weight: bold; font-size: 13px;">
-                            -------------
+                            ------------------------------------------------------------------------
                         </div>
                         <table style="width: 100%; border: 1px solid white; margin-top: 20px;">
                             <tr style="border: none !important;">
-                                <td style="text-align: left; border: none !important;">
+                                <td style="width: 30%; text-align: left; border: none !important;">
                                     <b>NOMBRE:</b>
                                 </td>
-                                <td style="padding-left: 5px; border: none !important; text-align: start !important;">
-                                    -----------------------------------------------------------
+                                <td style="padding-left: 5px; border-bottom: 1px solid black !important; text-align: start !important;">
+                                    
                                 </td>
                             </tr>
                             <tr style="border: none !important;">
-                                <td style="text-align: left; padding-top: 20px; ">
+                                <td style="width: 30%; text-align: left; border: none !important; padding-top: 20px; ">
                                     <b>FIRMA:</b>
                                 </td>
                                 <td style="padding-left: 5px; border-bottom: 1px solid black !important; text-align: start !important; padding-top: 20px;">
-                                    -----------------------------------------------------------
+                                    
                                 </td>
                             </tr>
                             <tr style="border: none !important;">
-                                <td style="text-align: left;">
+                                <td style="width: 30%; text-align: left; border: none !important;">
                                     <b>CI:</b>
                                 </td>
-                                <td style="padding-left: 5px; text-align: start !important; border-bottom: 1px solid black !important;">
-                                    -----------------------------------------------------------
+                                <td style="padding-left: 5px; border: none !important; text-align: start !important;">
+                                    
                                 </td>
                             </tr>
                         </table>
