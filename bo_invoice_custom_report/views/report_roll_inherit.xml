@@ -7,6 +7,14 @@
                      t-att-data-oe-id="o.id"
                      style="width: 80mm; font-size: 10pt; margin: 2mm; padding: 0;">
                     <div style="width: 80mm; font-size: 12px; padding: 0; font-family: 'Arial', sans-serif;">
+                        <div>
+                            <span t-if="o.state == 'cancel'" style="-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg); color: rgba(255, 0, 0, 0.5); font-size:60px; top:400px; position:absolute; text-align:center; width:300px;">
+                                <b>ANULADO</b>
+                            </span>
+                            <span t-if="o.code_environment == '2'" style="color: rgba(128, 128, 128, 0.5);font-size:35px;top:70px;position:absolute;text-align:center;width:335px;">
+                                <b>SIN VALOR LEGAL</b>
+                            </span>
+                        </div>
                         <table style="width: 100%; text-align: center; border: 1px solid white; ">
                             <tr style="border: none !important;">
                                 <td style="border: none !important;">
@@ -239,7 +247,8 @@
                         <div style="text-align: center; font-weight: bold; font-size: 13px;">
                             ------------------------------------------------------------------------
                         </div>
-                        <table style="width: 100%; border: 1px solid white; margin-top: 20px;">
+                        
+                        <table t-if="o.company_id.enable_footnote" style="width: 100%; border: 1px solid white; margin-top: 20px;">
                             <tr style="border: none !important;">
                                 <td style="width: 20%; text-align: right; border: none !important;">
                                     <b>NOMBRE:</b>
