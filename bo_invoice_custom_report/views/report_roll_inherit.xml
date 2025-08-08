@@ -236,6 +236,37 @@
                         <div style="text-align: center; margin-top: 10px;">
                             <img t-att-src="'data:image/png;base64,' + str(o.generate_qr())" width="120" height="120"/>
                         </div>
+                        <div style="text-align: center; font-weight: bold; font-size: 13px;">
+                            ------------------------------------------------------------------------
+                        </div>
+                        <div>
+                            <table style="width: 100%; text-align: center; border: 1px solid white;">
+                                <tr style="border: none !important;">
+                                    <td style="width: 60%; text-align: right; border: none !important;">
+                                        <b>NOMBRE:</b>
+                                    </td>
+                                    <td style="padding-left: 5px; border: none !important; text-align: start !important;">
+                                        ------------------------------------------------------------------------
+                                    </td>
+                                </tr>
+                                <tr style="border: none !important;">
+                                    <td style="text-align: right; border: none !important;">
+                                        <b>CI:</b>
+                                    </td>
+                                    <td style="padding-left: 5px; border: none !important; text-align: start !important;">
+                                        ------------------------------------------------------------------------
+                                    </td>
+                                </tr>
+                                <tr style="border: none !important;">
+                                    <td style="text-align: right; border: none !important;">
+                                        <b>FIRMA:</b>
+                                    </td>
+                                    <td style="padding-left: 5px; border: none !important; text-align: start !important;">
+                                        ------------------------------------------------------------------------
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </t>
